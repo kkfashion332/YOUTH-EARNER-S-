@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOUTH EARNER'S - Strategy & Earn</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="loginScreen" class="screen active">
+        <div class="glass-panel login-box">
+            <h1 style="color: #10b981;">YOUTH EARNER'S</h1>
+            <p>Strategy & Mind Game</p>
+            
+            <input type="email" placeholder="Email Address" id="emailInput">
+            <input type="password" placeholder="Password" id="passInput">
+            
+            <button class="btn-primary" id="loginBtn">Login</button>
+            <button class="btn-secondary" id="signupBtn" style="width: 100%; padding: 12px; background: #374151; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;">Sign Up</button>
+            
+            <div class="divider">OR</div>
+            <button class="btn-google" id="googleBtn">Continue with Google 🌐</button>
+        </div>
+    </div>
+
+    <div id="appScreen" class="screen">
+        
+        <header>
+            <div class="user-profile">
+                <div class="avatar">YE</div>
+                <span id="userNameDisplay">Player</span>
+            </div>
+            <button id="logoutBtn" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
+        </header>
+
+        <div id="lobbyView" class="view active">
+            <h2>Select Match</h2>
+            <div class="match-cards">
+                <div class="card" onclick="startGame(5)">
+                    <h3>Entry: ₹5</h3>
+                    <p>Prize: ₹9</p>
+                    <button class="btn-play">Play Now</button>
+                </div>
+                <div class="card" onclick="startGame(10)">
+                    <h3>Entry: ₹10</h3>
+                    <p>Prize: ₹18</p>
+                    <button class="btn-play">Play Now</button>
+                </div>
+                <div class="card" onclick="startGame(20)">
+                    <h3>Entry: ₹20</h3>
+                    <p>Prize: ₹36</p>
+                    <button class="btn-play">Play Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameView" class="view">
+            <div class="game-header">
+                <h2>Round <span id="roundCount">1</span>/3</h2>
+                <button class="btn-exit" onclick="showLobby()">Exit</button>
+            </div>
+            
+            <div class="score-board">
+                <div class="player">
+                    <span>You</span>
+                    <h3 id="p1Score">0</h3>
+                </div>
+                <div class="vs">VS</div>
+                <div class="player">
+                    <span>Opponent</span>
+                    <h3 id="p2Score">0</h3>
+                </div>
+            </div>
+
+            <div class="token-balance">
+                <p>Your Tokens: <strong id="p1Tokens">500</strong></p>
+                <p>Opponent: <strong id="p2Tokens">500</strong></p>
+            </div>
+
+            <div class="bidding-area">
+                <p>Enter your Bid</p>
+                <input type="number" id="bidInput" placeholder="Enter tokens" min="1">
+                <button class="btn-lock" onclick="lockBid()">🔒 Lock Tokens</button>
+            </div>
+
+            <div id="roundResult" class="result-message"></div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active">🏠<br>Home</div>
+            <div class="nav-item">🏆<br>Leaderboard</div>
+            
+            <div class="wallet-center" onclick="alert('Wallet: Add/Withdraw Funds coming soon!')">
+                <div class="wallet-btn">
+                    💰<br><span>₹0</span>
+                </div>
+            </div>
+
+            <div class="nav-item">📜<br>History</div>
+            <div class="nav-item">⚙️<br>Settings</div>
+        </nav>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
+
