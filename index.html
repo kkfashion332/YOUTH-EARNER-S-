@@ -1,109 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOUTH EARNER'S - Strategy & Earn</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youth Earner's - Premium Platform</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="loginScreen" class="screen active">
-        <div class="glass-panel login-box">
-            <h1 style="color: #10b981;">YOUTH EARNER'S</h1>
-            <p>Strategy & Mind Game</p>
-            
-            <input type="email" placeholder="Email Address" id="emailInput">
-            <input type="password" placeholder="Password" id="passInput">
-            
-            <button class="btn-primary" id="loginBtn">Login</button>
-            <button class="btn-secondary" id="signupBtn" style="width: 100%; padding: 12px; background: #374151; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;">Sign Up</button>
-            
-            <div class="divider">OR</div>
-            <button class="btn-google" id="googleBtn">Continue with Google 🌐</button>
+    <div id="splashScreen" class="screen active">
+        <div class="logo-container animate-logo">
+            <svg class="logo-svg" viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#B8860B" />
+                        <stop offset="15%" stop-color="#FFD700" />
+                        <stop offset="35%" stop-color="#FFF8DC" />
+                        <stop offset="50%" stop-color="#DAA520" />
+                        <stop offset="65%" stop-color="#FFD700" />
+                        <stop offset="85%" stop-color="#B8860B" />
+                        <stop offset="100%" stop-color="#8B6914" />
+                    </linearGradient>
+                    <linearGradient id="textGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#F5E6A3" />
+                        <stop offset="30%" stop-color="#D4AF37" />
+                        <stop offset="60%" stop-color="#FFD700" />
+                        <stop offset="100%" stop-color="#B8860B" />
+                    </linearGradient>
+                    <radialGradient id="innerGlow" cx="50%" cy="40%" r="80%">
+                        <stop offset="0%" stop-color="#1A1A1A" />
+                        <stop offset="70%" stop-color="#0A0A0A" />
+                        <stop offset="100%" stop-color="#050505" />
+                    </radialGradient>
+                    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.8" />
+                    </filter>
+                    <filter id="sparkleGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="1.5" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <ellipse cx="420" cy="120" rx="415" ry="115" fill="none" stroke="url(#goldGradient)" stroke-width="5" />
+                <ellipse cx="420" cy="120" rx="405" ry="107" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" opacity="0.7" />
+                <ellipse cx="420" cy="120" rx="398" ry="102" fill="url(#innerGlow)" />
+                <path d="M 145 200 C 75 165, 75 75, 145 40" fill="none" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round" opacity="0.95" />
+                <g transform="translate(155, 120)" filter="url(#textShadow)">
+                    <path d="M -50 58 C -95 30, -95 -30, -50 -58" fill="none" stroke="url(#goldGradient)" stroke-width="8" stroke-linecap="round" />
+                    <path d="M -38 -48 L -10 -8 L 18 -48" fill="none" stroke="url(#textGold)" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter" />
+                    <path d="M -10 -8 L -10 52" fill="none" stroke="url(#textGold)" stroke-width="11" stroke-linecap="square" />
+                    <g transform="translate(8, 0)">
+                        <path d="M -6 -48 L 50 -48 L 62 -36" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
+                        <path d="M -6 -8 L 55 -8" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" />
+                        <path d="M -6 32 L 50 32 L 62 20" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
+                        <path d="M -6 -48 L -6 32" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" />
+                    </g>
+                </g>
+                <g transform="translate(200, 62)" filter="url(#sparkleGlow)">
+                    <path d="M 0 -10 L 1.5 -1.5 L 10 0 L 1.5 1.5 L 0 10 L -1.5 1.5 L -10 0 L -1.5 -1.5 Z" fill="#FFF8DC" />
+                    <circle cx="0" cy="0" r="2" fill="#FFD700" />
+                </g>
+                <line x1="300" y1="55" x2="300" y2="185" stroke="url(#goldGradient)" stroke-width="1.5" />
+                <g transform="translate(300, 120)" filter="url(#sparkleGlow)">
+                    <path d="M 0 -12 L 3.5 -3.5 L 12 0 L 3.5 3.5 L 0 12 L -3.5 3.5 L -12 0 L -3.5 -3.5 Z" fill="url(#goldGradient)" />
+                    <circle cx="0" cy="0" r="2" fill="#FFF8DC" />
+                </g>
+                <text x="500" y="118" text-anchor="middle" fill="url(#textGold)" font-family="'Cormorant Garamond', 'Times New Roman', serif" font-size="72" font-weight="400" letter-spacing="12" filter="url(#textShadow)">YOUTH</text>
+                <line x1="380" y1="155" x2="440" y2="155" stroke="url(#goldGradient)" stroke-width="1.5" />
+                <text x="540" y="160" text-anchor="middle" fill="url(#goldGradient)" font-family="'Cormorant Garamond', 'Times New Roman', serif" font-size="28" font-weight="500" letter-spacing="10" filter="url(#textShadow)">EARNER'S</text>
+                <line x1="640" y1="155" x2="700" y2="155" stroke="url(#goldGradient)" stroke-width="1.5" />
+            </svg>
+            <p class="subtitle animate-subtitle">YOUR TRUSTED EARNING PLATFORM</p>
         </div>
     </div>
 
-    <div id="appScreen" class="screen">
-        
-        <header>
-            <div class="user-profile">
-                <div class="avatar">YE</div>
-                <span id="userNameDisplay">Player</span>
-            </div>
-            <button id="logoutBtn" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
-        </header>
-
-        <div id="lobbyView" class="view active">
-            <h2>Select Match</h2>
-            <div class="match-cards">
-                <div class="card" onclick="startGame(5)">
-                    <h3>Entry: ₹5</h3>
-                    <p>Prize: ₹9</p>
-                    <button class="btn-play">Play Now</button>
-                </div>
-                <div class="card" onclick="startGame(10)">
-                    <h3>Entry: ₹10</h3>
-                    <p>Prize: ₹18</p>
-                    <button class="btn-play">Play Now</button>
-                </div>
-                <div class="card" onclick="startGame(20)">
-                    <h3>Entry: ₹20</h3>
-                    <p>Prize: ₹36</p>
-                    <button class="btn-play">Play Now</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="gameView" class="view">
-            <div class="game-header">
-                <h2>Round <span id="roundCount">1</span>/3</h2>
-                <button class="btn-exit" onclick="showLobby()">Exit</button>
+    <div id="authScreen" class="screen">
+        <div class="glass-box">
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-sub">Log in to continue your journey.</p>
+            
+            <div class="input-group">
+                <span class="icon">📞</span>
+                <input type="number" id="phoneInput" placeholder="Mobile Number" />
             </div>
             
-            <div class="score-board">
-                <div class="player">
-                    <span>You</span>
-                    <h3 id="p1Score">0</h3>
-                </div>
-                <div class="vs">VS</div>
-                <div class="player">
-                    <span>Opponent</span>
-                    <h3 id="p2Score">0</h3>
-                </div>
+            <div class="input-group">
+                <span class="icon">🔒</span>
+                <input type="password" id="passInput" placeholder="Password" />
             </div>
 
-            <div class="token-balance">
-                <p>Your Tokens: <strong id="p1Tokens">500</strong></p>
-                <p>Opponent: <strong id="p2Tokens">500</strong></p>
-            </div>
-
-            <div class="bidding-area">
-                <p>Enter your Bid</p>
-                <input type="number" id="bidInput" placeholder="Enter tokens" min="1">
-                <button class="btn-lock" onclick="lockBid()">🔒 Lock Tokens</button>
-            </div>
-
-            <div id="roundResult" class="result-message"></div>
-        </div>
-
-        <nav class="bottom-nav">
-            <div class="nav-item active">🏠<br>Home</div>
-            <div class="nav-item">🏆<br>Leaderboard</div>
+            <button id="loginBtn" class="btn-gold">LOGIN</button>
+            <button id="signupBtn" class="btn-outline">CREATE ACCOUNT</button>
             
-            <div class="wallet-center" onclick="alert('Wallet: Add/Withdraw Funds coming soon!')">
-                <div class="wallet-btn">
-                    💰<br><span>₹0</span>
-                </div>
-            </div>
+            <div class="divider"><span>OR</span></div>
+            
+            <button id="googleBtn" class="btn-google">
+                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google">
+                Continue with Google
+            </button>
+        </div>
+    </div>
 
-            <div class="nav-item">📜<br>History</div>
-            <div class="nav-item">⚙️<br>Settings</div>
-        </nav>
+    <div id="mainApp" class="screen">
+        <div class="glass-box" style="text-align: center;">
+            <h1 style="color: #FFD700; font-family: 'Cormorant Garamond', serif;">YOUTH EARNER'S</h1>
+            <p style="color: #ccc; margin-top: 10px;">Welcome inside the premium platform!</p>
+            <button id="logoutBtn" class="btn-outline" style="margin-top: 20px;">LOGOUT</button>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
 </body>
 </html>
-
