@@ -1,7 +1,7 @@
 // IMPORT FIREBASE SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGncZ4cm-VUA_zSVsaGA9znU-QJz5rbqA",
@@ -44,7 +44,6 @@ document.querySelectorAll('.nav-trigger').forEach(trigger => {
         let target = trigger.getAttribute('data-target');
         appViews.forEach(v => v.classList.remove('active'));
         document.getElementById(target).classList.add('active');
-        // Update bottom nav active state visually
         navItems.forEach(n => n.classList.remove('active'));
         document.querySelector(`.nav-item[data-target="${target}"]`).classList.add('active');
     });
@@ -56,7 +55,7 @@ let tapTimer;
 document.getElementById('topSmallLogo').addEventListener('click', () => {
     tapCount++;
     clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => { tapCount = 0; }, 2000); // Reset if too slow
+    tapTimer = setTimeout(() => { tapCount = 0; }, 2000); 
     
     if(tapCount === 7) {
         appViews.forEach(v => v.classList.remove('active'));
@@ -66,10 +65,7 @@ document.getElementById('topSmallLogo').addEventListener('click', () => {
     }
 });
 
-
-// ================= AUTH LOGIC =================
-setTimeout(() => { if (!auth.currentUser) showScreen('authScreen'); }, 3000);
-
+// ================= AUTHENTICATION LOGIC =================
 document.getElementById('goToSignupBtn').addEventListener('click', () => showScreen('signupScreen'));
 document.getElementById('backToLoginBtn').addEventListener('click', () => showScreen('authScreen'));
 
@@ -95,13 +91,35 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider));
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
+
+// ================= SPLASH SCREEN 4.5 SECONDS DELAY LOGIC =================
+let isInitialLoad = true;
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        showScreen('mainApp');
-        document.getElementById('profileUsername').innerText = user.displayName || "Player";
-        if(user.photoURL) document.getElementById('userProfilePic').src = user.photoURL;
+        if (isInitialLoad) {
+            // App khulte hi 4500ms (4.5 seconds) tak logo rukega fir Home page aayega
+            setTimeout(() => {
+                showScreen('mainApp');
+                document.getElementById('profileUsername').innerText = user.displayName || "Player";
+                if(user.photoURL) document.getElementById('userProfilePic').src = user.photoURL;
+                isInitialLoad = false;
+            }, 4500); 
+        } else {
+            showScreen('mainApp');
+            document.getElementById('profileUsername').innerText = user.displayName || "Player";
+            if(user.photoURL) document.getElementById('userProfilePic').src = user.photoURL;
+        }
     } else {
-        showScreen('authScreen');
+        if (isInitialLoad) {
+            // App khulte hi 4500ms (4.5 seconds) tak logo rukega fir Login page aayega
+            setTimeout(() => {
+                showScreen('authScreen');
+                isInitialLoad = false;
+            }, 4500);
+        } else {
+            showScreen('authScreen');
+        }
     }
 });
 
@@ -127,13 +145,12 @@ onValue(bannerRef, (snapshot) => {
         document.getElementById('homeBanner').src = data.imgUrl;
         document.getElementById('bannerLink').href = data.linkUrl;
         
-        // Populate Admin Inputs automatically
         document.getElementById('adminBannerImg').value = data.imgUrl;
         document.getElementById('adminBannerLink').value = data.linkUrl;
     }
 });
 
-// Load Matches Live (Home + Admin List)
+// Load Matches Live
 onValue(matchesRef, (snapshot) => {
     const data = snapshot.val();
     const matchList = document.getElementById('matchList');
@@ -143,18 +160,15 @@ onValue(matchesRef, (snapshot) => {
     adminMatchList.innerHTML = "";
 
     if(data) {
-        // Sort matches by fee
         let matchesArr = Object.entries(data).sort((a,b) => a[1].fee - b[1].fee);
         
         matchesArr.forEach(([id, match]) => {
-            // Home User View
             matchList.innerHTML += `
                 <div class="match-card">
                     <div><span class="match-fee">Entry: ₹${match.fee}</span></div>
                     <button class="play-btn" onclick="alert('Matching for ₹${match.fee} started!')">PLAY NOW</button>
                 </div>`;
             
-            // Admin View
             adminMatchList.innerHTML += `
                 <div class="match-card">
                     <span class="match-fee">₹${match.fee}</span>
