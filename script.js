@@ -1,17 +1,8 @@
-// Import Firebase SDKs (Added updateProfile to save Username)
+// IMPORT FIREBASE SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    GoogleAuthProvider, 
-    signInWithPopup, 
-    onAuthStateChanged, 
-    updateProfile,
-    signOut 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGncZ4cm-VUA_zSVsaGA9znU-QJz5rbqA",
   authDomain: "kk-esports.firebaseapp.com",
@@ -21,139 +12,177 @@ const firebaseConfig = {
   appId: "1:694738469810:web:2a3c163cd68cbcef0a1aab"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 
-// DOM Elements
-const splashScreen = document.getElementById('splashScreen');
-const authScreen = document.getElementById('authScreen');
-const signupScreen = document.getElementById('signupScreen');
-const mainApp = document.getElementById('mainApp');
-
-// Login Elements
-const phoneInput = document.getElementById('phoneInput');
-const passInput = document.getElementById('passInput');
-
-// Registration Elements
-const regUsername = document.getElementById('regUsername');
-const regPhone = document.getElementById('regPhone');
-const regPass = document.getElementById('regPass');
-
-// ================= SPLASH SCREEN LOGIC =================
-setTimeout(() => {
-    if (!auth.currentUser) {
-        splashScreen.classList.remove('active');
-        authScreen.classList.add('active');
-    }
-}, 3500);
-
-// ================= SCREEN SWITCHING =================
-// Login to Sign Up Page
-document.getElementById('goToSignupBtn').addEventListener('click', () => {
-    authScreen.classList.remove('active');
-    signupScreen.classList.add('active');
-});
-
-// Sign Up to Login Page
-document.getElementById('backToLoginBtn').addEventListener('click', () => {
-    signupScreen.classList.remove('active');
-    authScreen.classList.add('active');
-});
-
-
-// ================= HELPER FUNCTION =================
-function getFakeEmail(number) {
-    return number.trim() + "@youthearners.com";
+// ================= SCREEN & NAV LOGIC =================
+const screens = ['splashScreen', 'authScreen', 'signupScreen', 'mainApp'];
+function showScreen(screenId) {
+    screens.forEach(s => document.getElementById(s).classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
 }
 
-// ================= AUTHENTICATION LOGIC =================
-
-// 1. FINAL SIGN UP (Create Account with Username)
-document.getElementById('finalSignupBtn').addEventListener('click', () => {
-    const username = regUsername.value;
-    const phone = regPhone.value;
-    const password = regPass.value;
-
-    if (!username) return alert("Please enter a username.");
-    if (phone.length < 10) return alert("Please enter a valid 10-digit mobile number.");
-    if (password.length < 6) return alert("Password must be at least 6 characters.");
-
-    const fakeEmail = getFakeEmail(phone);
-
-    // Create User in Firebase
-    createUserWithEmailAndPassword(auth, fakeEmail, password)
-        .then((userCredential) => {
-            // Account created! Now save the username
-            updateProfile(userCredential.user, {
-                displayName: username
-            }).then(() => {
-                alert("Account created successfully! Welcome " + username);
-                // onAuthStateChanged trigger hoga aur apne aap main app me le jayega
-            });
-        })
-        .catch((error) => {
-            alert("Error: " + error.message);
-        });
-});
-
-// 2. LOGIN
-document.getElementById('loginBtn').addEventListener('click', () => {
-    const phone = phoneInput.value;
-    const password = passInput.value;
-
-    if (!phone || !password) return alert("Please enter both number and password.");
-
-    const fakeEmail = getFakeEmail(phone);
-
-    signInWithEmailAndPassword(auth, fakeEmail, password)
-        .then((userCredential) => {
-            console.log("Logged in successfully");
-        })
-        .catch((error) => {
-            alert("Invalid Number or Password.");
-        });
-});
-
-// 3. GOOGLE LOGIN
-document.getElementById('googleBtn').addEventListener('click', () => {
-    signInWithPopup(auth, googleProvider)
-        .then((result) => {
-            console.log("Google Login Success!");
-        }).catch((error) => {
-            alert("Google Login Error: " + error.message);
-        });
-});
-
-// 4. LOGOUT
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        console.log("Logged out");
+// Bottom Nav Logic
+const navItems = document.querySelectorAll('.nav-item');
+const appViews = document.querySelectorAll('.app-view');
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        navItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        
+        let targetView = item.getAttribute('data-target');
+        appViews.forEach(v => v.classList.remove('active'));
+        document.getElementById(targetView).classList.add('active');
     });
 });
 
-// 5. MONITOR AUTH STATE (Screen Switcher)
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Hide all login/signup screens
-        splashScreen.classList.remove('active');
-        authScreen.classList.remove('active');
-        signupScreen.classList.remove('active');
-        
-        // Show Main App
-        mainApp.classList.add('active');
+// Profile Menu triggers
+document.querySelectorAll('.nav-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+        let target = trigger.getAttribute('data-target');
+        appViews.forEach(v => v.classList.remove('active'));
+        document.getElementById(target).classList.add('active');
+        // Update bottom nav active state visually
+        navItems.forEach(n => n.classList.remove('active'));
+        document.querySelector(`.nav-item[data-target="${target}"]`).classList.add('active');
+    });
+});
 
-        // Show Name
-        let displayName = user.displayName || "Player";
-        document.getElementById('displayUserName').innerText = "Hello, " + displayName;
-    } else {
-        // User logged out
-        mainApp.classList.remove('active');
-        phoneInput.value = "";
-        passInput.value = "";
-        regUsername.value = "";
-        regPhone.value = "";
-        regPass.value = "";
+// ================= 7 TAP SECRET ADMIN LOGIC =================
+let tapCount = 0;
+let tapTimer;
+document.getElementById('topSmallLogo').addEventListener('click', () => {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 2000); // Reset if too slow
+    
+    if(tapCount === 7) {
+        appViews.forEach(v => v.classList.remove('active'));
+        document.getElementById('adminView').classList.add('active');
+        tapCount = 0;
+        alert("Welcome to Admin Panel!");
     }
 });
+
+
+// ================= AUTH LOGIC =================
+setTimeout(() => { if (!auth.currentUser) showScreen('authScreen'); }, 3000);
+
+document.getElementById('goToSignupBtn').addEventListener('click', () => showScreen('signupScreen'));
+document.getElementById('backToLoginBtn').addEventListener('click', () => showScreen('authScreen'));
+
+function getFakeEmail(num) { return num.trim() + "@youthearners.com"; }
+
+document.getElementById('finalSignupBtn').addEventListener('click', () => {
+    const user = document.getElementById('regUsername').value;
+    const phone = document.getElementById('regPhone').value;
+    const pass = document.getElementById('regPass').value;
+    if(!user || phone.length < 10 || pass.length < 6) return alert("Fill all details correctly!");
+    
+    createUserWithEmailAndPassword(auth, getFakeEmail(phone), pass).then((cred) => {
+        updateProfile(cred.user, { displayName: user, photoURL: "https://via.placeholder.com/100" });
+    }).catch(e => alert(e.message));
+});
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+    const phone = document.getElementById('phoneInput').value;
+    const pass = document.getElementById('passInput').value;
+    signInWithEmailAndPassword(auth, getFakeEmail(phone), pass).catch(e => alert("Wrong Number/Pass"));
+});
+
+document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider));
+document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        showScreen('mainApp');
+        document.getElementById('profileUsername').innerText = user.displayName || "Player";
+        if(user.photoURL) document.getElementById('userProfilePic').src = user.photoURL;
+    } else {
+        showScreen('authScreen');
+    }
+});
+
+// Profile Pic Change (Basic via URL prompt)
+window.changeProfilePic = function() {
+    let newUrl = prompt("Enter new Profile Image URL:");
+    if(newUrl && auth.currentUser) {
+        updateProfile(auth.currentUser, { photoURL: newUrl }).then(() => {
+            document.getElementById('userProfilePic').src = newUrl;
+        });
+    }
+}
+
+
+// ================= REALTIME DATABASE (ADMIN & HOME) =================
+const matchesRef = ref(db, 'youth_earners/matches');
+const bannerRef = ref(db, 'youth_earners/banner');
+
+// Load Banner Live
+onValue(bannerRef, (snapshot) => {
+    const data = snapshot.val();
+    if(data) {
+        document.getElementById('homeBanner').src = data.imgUrl;
+        document.getElementById('bannerLink').href = data.linkUrl;
+        
+        // Populate Admin Inputs automatically
+        document.getElementById('adminBannerImg').value = data.imgUrl;
+        document.getElementById('adminBannerLink').value = data.linkUrl;
+    }
+});
+
+// Load Matches Live (Home + Admin List)
+onValue(matchesRef, (snapshot) => {
+    const data = snapshot.val();
+    const matchList = document.getElementById('matchList');
+    const adminMatchList = document.getElementById('adminMatchList');
+    
+    matchList.innerHTML = "";
+    adminMatchList.innerHTML = "";
+
+    if(data) {
+        // Sort matches by fee
+        let matchesArr = Object.entries(data).sort((a,b) => a[1].fee - b[1].fee);
+        
+        matchesArr.forEach(([id, match]) => {
+            // Home User View
+            matchList.innerHTML += `
+                <div class="match-card">
+                    <div><span class="match-fee">Entry: ₹${match.fee}</span></div>
+                    <button class="play-btn" onclick="alert('Matching for ₹${match.fee} started!')">PLAY NOW</button>
+                </div>`;
+            
+            // Admin View
+            adminMatchList.innerHTML += `
+                <div class="match-card">
+                    <span class="match-fee">₹${match.fee}</span>
+                    <button onclick="deleteMatch('${id}')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Delete</button>
+                </div>`;
+        });
+    } else {
+        matchList.innerHTML = "<p style='color:#888; text-align:center;'>No matches added by Admin.</p>";
+    }
+});
+
+// Admin Functions
+document.getElementById('updateBannerBtn').addEventListener('click', () => {
+    let img = document.getElementById('adminBannerImg').value;
+    let link = document.getElementById('adminBannerLink').value;
+    set(bannerRef, { imgUrl: img, linkUrl: link }).then(() => alert("Banner Updated!"));
+});
+
+document.getElementById('addMatchBtn').addEventListener('click', () => {
+    let fee = parseInt(document.getElementById('adminMatchEntry').value);
+    if(!fee || fee <= 0) return alert("Enter valid fee");
+    push(matchesRef, { fee: fee }).then(() => {
+        document.getElementById('adminMatchEntry').value = "";
+    });
+});
+
+window.deleteMatch = function(matchId) {
+    if(confirm("Delete this match?")) {
+        remove(ref(db, `youth_earners/matches/${matchId}`));
+    }
+}
