@@ -9,7 +9,9 @@
 </head>
 <body>
 
+    <!-- SPLASH SCREEN (Logo Animation) -->
     <div id="splashScreen" class="screen active">
+        <!-- Logo code wahi same rahega jo pehle tha -->
         <div class="logo-container animate-logo">
             <svg class="logo-svg" viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
                 <defs>
@@ -77,6 +79,7 @@
         </div>
     </div>
 
+    <!-- AUTHENTICATION SCREEN (LOGIN) -->
     <div id="authScreen" class="screen">
         <div class="glass-box">
             <h2 class="auth-title">Welcome Back</h2>
@@ -93,7 +96,8 @@
             </div>
 
             <button id="loginBtn" class="btn-gold">LOGIN</button>
-            <button id="signupBtn" class="btn-outline">CREATE ACCOUNT</button>
+            <!-- ID Changed to navigate to new page -->
+            <button id="goToSignupBtn" class="btn-outline">CREATE ACCOUNT</button>
             
             <div class="divider"><span>OR</span></div>
             
@@ -104,10 +108,41 @@
         </div>
     </div>
 
+    <!-- NEW SIGN UP SCREEN (REGISTER) -->
+    <div id="signupScreen" class="screen">
+        <div class="glass-box">
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-sub">Join Youth Earner's today.</p>
+
+            <div class="input-group">
+                <span class="icon">👤</span>
+                <input type="text" id="regUsername" placeholder="Username" />
+            </div>
+            
+            <div class="input-group">
+                <span class="icon">📞</span>
+                <input type="number" id="regPhone" placeholder="Mobile Number" />
+            </div>
+            
+            <div class="input-group">
+                <span class="icon">🔒</span>
+                <input type="password" id="regPass" placeholder="Password" />
+            </div>
+
+            <button id="finalSignupBtn" class="btn-gold">CREATE ACCOUNT</button>
+            
+            <p style="text-align: center; margin-top: 15px; font-size: 14px; color: #aaaaaa;">
+                Already have an account? <span id="backToLoginBtn" style="color: #FFD700; cursor: pointer; font-weight: 600;">Log In</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN (After Login) -->
     <div id="mainApp" class="screen">
         <div class="glass-box" style="text-align: center;">
             <h1 style="color: #FFD700; font-family: 'Cormorant Garamond', serif;">YOUTH EARNER'S</h1>
             <p style="color: #ccc; margin-top: 10px;">Welcome inside the premium platform!</p>
+            <h3 id="displayUserName" style="color: #fff; margin-top: 15px;"></h3>
             <button id="logoutBtn" class="btn-outline" style="margin-top: 20px;">LOGOUT</button>
         </div>
     </div>
