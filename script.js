@@ -1,4 +1,4 @@
-// Import Firebase SDKs
+// Import Firebase SDKs (Added updateProfile to save Username)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
     getAuth, 
@@ -7,6 +7,7 @@ import {
     GoogleAuthProvider, 
     signInWithPopup, 
     onAuthStateChanged, 
+    updateProfile,
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -28,41 +29,69 @@ const googleProvider = new GoogleAuthProvider();
 // DOM Elements
 const splashScreen = document.getElementById('splashScreen');
 const authScreen = document.getElementById('authScreen');
+const signupScreen = document.getElementById('signupScreen');
 const mainApp = document.getElementById('mainApp');
+
+// Login Elements
 const phoneInput = document.getElementById('phoneInput');
 const passInput = document.getElementById('passInput');
 
+// Registration Elements
+const regUsername = document.getElementById('regUsername');
+const regPhone = document.getElementById('regPhone');
+const regPass = document.getElementById('regPass');
+
 // ================= SPLASH SCREEN LOGIC =================
-// 3.5 seconds ke baad Splash Screen hide hogi aur Auth screen aayegi
 setTimeout(() => {
-    // Agar user logged in nahi hai, tabhi Auth screen dikhao
     if (!auth.currentUser) {
         splashScreen.classList.remove('active');
         authScreen.classList.add('active');
     }
 }, 3500);
 
+// ================= SCREEN SWITCHING =================
+// Login to Sign Up Page
+document.getElementById('goToSignupBtn').addEventListener('click', () => {
+    authScreen.classList.remove('active');
+    signupScreen.classList.add('active');
+});
+
+// Sign Up to Login Page
+document.getElementById('backToLoginBtn').addEventListener('click', () => {
+    signupScreen.classList.remove('active');
+    authScreen.classList.add('active');
+});
+
+
 // ================= HELPER FUNCTION =================
-// Yeh function Number ko ek fake email me convert karega (e.g., 9876543210@youthearners.com)
 function getFakeEmail(number) {
     return number.trim() + "@youthearners.com";
 }
 
 // ================= AUTHENTICATION LOGIC =================
 
-// 1. SIGN UP (Create Account)
-document.getElementById('signupBtn').addEventListener('click', () => {
-    const phone = phoneInput.value;
-    const password = passInput.value;
+// 1. FINAL SIGN UP (Create Account with Username)
+document.getElementById('finalSignupBtn').addEventListener('click', () => {
+    const username = regUsername.value;
+    const phone = regPhone.value;
+    const password = regPass.value;
 
+    if (!username) return alert("Please enter a username.");
     if (phone.length < 10) return alert("Please enter a valid 10-digit mobile number.");
     if (password.length < 6) return alert("Password must be at least 6 characters.");
 
     const fakeEmail = getFakeEmail(phone);
 
+    // Create User in Firebase
     createUserWithEmailAndPassword(auth, fakeEmail, password)
         .then((userCredential) => {
-            alert("Account created successfully! Welcome to Youth Earner's.");
+            // Account created! Now save the username
+            updateProfile(userCredential.user, {
+                displayName: username
+            }).then(() => {
+                alert("Account created successfully! Welcome " + username);
+                // onAuthStateChanged trigger hoga aur apne aap main app me le jayega
+            });
         })
         .catch((error) => {
             alert("Error: " + error.message);
@@ -107,15 +136,24 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 // 5. MONITOR AUTH STATE (Screen Switcher)
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is logged in -> Show Main App, Hide others
+        // Hide all login/signup screens
         splashScreen.classList.remove('active');
         authScreen.classList.remove('active');
+        signupScreen.classList.remove('active');
+        
+        // Show Main App
         mainApp.classList.add('active');
+
+        // Show Name
+        let displayName = user.displayName || "Player";
+        document.getElementById('displayUserName').innerText = "Hello, " + displayName;
     } else {
-        // User is logged out 
-        // Note: Splash screen will automatically show Auth screen after 3.5s if logged out
+        // User logged out
         mainApp.classList.remove('active');
         phoneInput.value = "";
         passInput.value = "";
+        regUsername.value = "";
+        regPhone.value = "";
+        regPass.value = "";
     }
 });
