@@ -1,4 +1,4 @@
-// IMPORT FIREBASE SDKs (Added Storage for Gallery Upload)
+// IMPORT FIREBASE SDKs 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getDatabase, ref as dbRef, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-const storage = getStorage(app); // Storage Init
+const storage = getStorage(app); 
 const googleProvider = new GoogleAuthProvider();
 
 // ================= NAVIGATION LOGIC =================
@@ -106,7 +106,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ================= PROFILE: EDIT NAME & GALLERY UPLOAD =================
-// 1. Edit Name Logic
 const nameInput = document.getElementById('profileUsernameInput');
 const editBtn = document.getElementById('editNameBtn');
 const saveBtn = document.getElementById('saveNameBtn');
@@ -130,7 +129,7 @@ saveBtn.addEventListener('click', () => {
     }
 });
 
-// 2. Gallery Upload Logic (Firebase Storage)
+// Gallery Upload Logic (Firebase Storage)
 const avatarClicker = document.getElementById('avatarClicker');
 const imageUploadInput = document.getElementById('imageUploadInput');
 const uploadStatus = document.getElementById('uploadStatus');
@@ -140,35 +139,31 @@ avatarClicker.addEventListener('click', () => imageUploadInput.click());
 imageUploadInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if(!file) return;
-
     if(!auth.currentUser) return alert("Please login first");
 
     uploadStatus.style.display = 'block';
-    
-    // Create reference in storage: avatars/user_uid
     const imgStorageRef = storageRef(storage, `avatars/${auth.currentUser.uid}`);
     
     try {
         await uploadBytes(imgStorageRef, file);
         const downloadURL = await getDownloadURL(imgStorageRef);
-        
         await updateProfile(auth.currentUser, { photoURL: downloadURL });
         document.getElementById('userProfilePic').src = downloadURL;
-        alert("Profile picture updated!");
+        alert("Profile picture updated successfully!");
     } catch (error) {
-        alert("Upload failed. (Make sure Firebase Storage rules are public/auth)");
+        // DETAILED ERROR FIX FOR STORAGE:
         console.error(error);
+        alert("ERROR UPLOADING IMAGE!\n\nFix this by going to Firebase Console -> Storage -> Rules.\nChange rule to: allow read, write: if true;");
     } finally {
         uploadStatus.style.display = 'none';
     }
 });
 
-
 // ================= REALTIME DATABASE (MATCHES & BANNER) =================
 const matchesRef = dbRef(db, 'youth_earners/matches');
 const bannerRef = dbRef(db, 'youth_earners/banner');
 
-// Load Banner Live
+// Load Banner
 onValue(bannerRef, (snapshot) => {
     const data = snapshot.val();
     if(data && data.imgUrl) {
@@ -177,7 +172,7 @@ onValue(bannerRef, (snapshot) => {
     }
 });
 
-// Load Matches Live (With Detailed Info)
+// Load Matches (Using YE Coins)
 onValue(matchesRef, (snapshot) => {
     const data = snapshot.val();
     const matchList = document.getElementById('matchList');
@@ -187,23 +182,21 @@ onValue(matchesRef, (snapshot) => {
     if(data) {
         let matchesArr = Object.entries(data).sort((a,b) => a[1].fee - b[1].fee);
         matchesArr.forEach(([id, match]) => {
-            // Player View (Advanced Card)
             matchList.innerHTML += `
                 <div class="match-card">
                     <div class="match-info">
-                        <div class="fee-box"><p>Entry Fee</p><h3>₹${match.fee}</h3></div>
-                        <div class="prize-box"><p>Winning Prize</p><h3>₹${match.prize}</h3></div>
+                        <div class="fee-box"><p>Entry Fee</p><h3>${match.fee} YE</h3></div>
+                        <div class="prize-box"><p>Winning Prize</p><h3>${match.prize} YE</h3></div>
                     </div>
                     <div class="match-footer">
                         <span class="player-type"><i class="fas fa-user-friends"></i> 1 VS 1 Battle</span>
-                        <button class="play-btn" onclick="alert('Joining Match for ₹${match.fee}...')">PLAY NOW</button>
+                        <button class="play-btn" onclick="alert('Joining Match for ${match.fee} YE...')">PLAY NOW</button>
                     </div>
                 </div>`;
             
-            // Admin View
             adminMatchList.innerHTML += `
                 <div style="background:#222; padding:10px; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Fee: ₹${match.fee} | Win: ₹${match.prize}</span>
+                    <span>Fee: ${match.fee} YE | Win: ${match.prize} YE</span>
                     <button onclick="deleteMatch('${id}')" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">Delete</button>
                 </div>`;
         });
@@ -212,15 +205,13 @@ onValue(matchesRef, (snapshot) => {
     }
 });
 
-// Admin Post Functions
+// Admin Actions
 document.getElementById('addMatchBtn').addEventListener('click', () => {
     let fee = parseInt(document.getElementById('adminMatchEntry').value);
     let prize = parseInt(document.getElementById('adminMatchPrize').value);
-    
     if(!fee || !prize) return alert("Enter both Fee and Prize amount!");
     
-    push(matchesRef, { fee: fee, prize: prize })
-    .then(() => {
+    push(matchesRef, { fee: fee, prize: prize }).then(() => {
         document.getElementById('adminMatchEntry').value = "";
         document.getElementById('adminMatchPrize').value = "";
         alert("Match Posted Live!");
