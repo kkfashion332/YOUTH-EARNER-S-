@@ -6,7 +6,6 @@
     --bg-card: #141414;
     --gold-main: #FFD700;
     --gold-dark: #B8860B;
-    --gold-light: #F5E6A3;
     --text-main: #ffffff;
     --text-muted: #888888;
     --danger: #ef4444;
@@ -35,16 +34,23 @@ body {
 }
 .screen.active { opacity: 1; visibility: visible; }
 
+/* ================= SPLASH & LOGO ================= */
+.logo-container { width: min(90vw, 400px); position: relative; text-align: center; }
+.logo-svg { width: 100%; filter: drop-shadow(0 20px 40px rgba(218, 165, 32, 0.2)); }
+.subtitle { margin-top: 15px; font-family: 'Poppins', sans-serif; color: #D4AF37; font-size: 12px; letter-spacing: 4px; font-weight: 300; }
+.animate-logo svg { animation: zoomGlow 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+.animate-subtitle { opacity: 0; animation: slideUpFade 1.5s ease forwards 1s; }
+@keyframes zoomGlow { 0% { transform: scale(0.8); opacity: 0; filter: drop-shadow(0 0 0px #FFD700); } 50% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4)); } 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 10px 20px rgba(184, 134, 11, 0.3)); } }
+@keyframes slideUpFade { 0% { transform: translateY(20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
 /* ================= AUTHENTICATION ================= */
 .glass-box { background: rgba(20,20,20,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.2); border-radius: 25px; padding: 40px 30px; width: 90%; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.9); }
 .auth-title { font-family: 'Cormorant Garamond', serif; color: var(--gold-main); font-size: 36px; margin-bottom: 25px; font-weight: 700;}
-
 .input-group { display: flex; align-items: center; background: rgba(0,0,0,0.6); border-bottom: 2px solid var(--gold-dark); margin-bottom: 20px; padding: 15px; border-radius: 10px 10px 0 0; transition: 0.3s;}
 .input-group:focus-within { border-bottom-color: var(--gold-main); background: rgba(255,215,0,0.05); }
 .input-group .icon { color: var(--gold-dark); font-size: 18px; width: 30px;}
 .input-group input { background: transparent; border: none; color: var(--gold-main); width: 100%; outline: none; font-size: 16px; font-family: 'Poppins', sans-serif;}
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
 .btn-gold { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-main)); color: #000; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 20px rgba(255,215,0,0.2); letter-spacing: 1px;}
 .btn-gold:active { transform: scale(0.98); }
 .btn-outline { width: 100%; padding: 16px; border: 2px solid var(--gold-dark); background: transparent; color: var(--gold-main); border-radius: 12px; cursor: pointer; font-weight: 600; margin-top: 15px;}
@@ -52,7 +58,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 .divider { margin: 25px 0; position: relative; text-align: center; }
 .divider::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #333; z-index: 1;}
 .divider span { background: #111; padding: 0 15px; color: var(--text-muted); font-size: 12px; position: relative; z-index: 2;}
-
 .switch-auth-text { margin-top: 20px; font-size: 14px; color: var(--text-muted); }
 .switch-auth-text span { color: var(--gold-main); font-weight: 600; cursor: pointer; }
 
@@ -86,6 +91,28 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 .player-type { background: #222; padding: 5px 10px; border-radius: 8px; font-size: 12px; color: #aaa;}
 .play-btn { background: var(--gold-main); color: #000; padding: 10px 25px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(255,215,0,0.3);}
 
+/* ================= NEW HORIZONTAL LEADERBOARD ================= */
+.leaderboard-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+.lb-row { display: flex; align-items: center; background: var(--bg-card); padding: 15px; border-radius: 15px; border: 1px solid #222; }
+.lb-rank { font-size: 16px; font-weight: bold; width: 30px; color: var(--text-muted); text-align: center; }
+.lb-avatar { width: 45px; height: 45px; border-radius: 50%; margin: 0 15px; border: 2px solid #444; object-fit: cover;}
+.lb-name { flex: 1; font-size: 16px; font-weight: 600; color: #fff; }
+.lb-score { font-size: 16px; font-weight: bold; color: var(--gold-main); }
+
+/* Highlight Top 3 */
+.lb-row.rank-1 { border-color: var(--gold-main); background: linear-gradient(90deg, rgba(255,215,0,0.1), transparent); }
+.lb-row.rank-1 .lb-rank { color: var(--gold-main); font-size: 20px;}
+.lb-row.rank-1 .lb-avatar { border-color: var(--gold-main); }
+
+.lb-row.rank-2 { border-color: #C0C0C0; }
+.lb-row.rank-2 .lb-rank { color: #C0C0C0; font-size: 18px;}
+.lb-row.rank-2 .lb-avatar { border-color: #C0C0C0; }
+
+.lb-row.rank-3 { border-color: #cd7f32; }
+.lb-row.rank-3 .lb-rank { color: #cd7f32; font-size: 18px;}
+.lb-row.rank-3 .lb-avatar { border-color: #cd7f32; }
+
+
 /* ================= PROFILE GALLERY & NAME ================= */
 .profile-header { text-align: center; margin-bottom: 35px; }
 .avatar-container { position: relative; width: 120px; height: 120px; margin: 0 auto; border-radius: 50%; border: 4px solid var(--gold-main); overflow: hidden; cursor: pointer; box-shadow: 0 0 20px rgba(255,215,0,0.2);}
@@ -112,7 +139,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 /* ================= WALLET ================= */
 .wallet-balance-card { background: linear-gradient(135deg, #2a2100, #141000); text-align: center; padding: 40px 20px; border-radius: 20px; border: 1px solid var(--gold-main); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(255,215,0,0.15);}
 .wallet-balance-card h1 { font-size: 48px; margin: 10px 0; color: var(--gold-main); font-family: 'Cormorant Garamond';}
-.winning-text { color: var(--success); font-weight: 600; font-size: 14px; background: rgba(16,185,129,0.1); display: inline-block; padding: 5px 15px; border-radius: 20px;}
+.winning-text { color: var(--gold-main); font-weight: 600; font-size: 14px; background: rgba(255,215,0,0.1); display: inline-block; padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);}
 
 .wallet-tabs { display: flex; background: #111; border-radius: 12px; padding: 5px; margin-bottom: 25px;}
 .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-muted); font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer;}
