@@ -6,6 +6,7 @@ import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstati
 const firebaseConfig = {
   apiKey: "AIzaSyCGncZ4cm-VUA_zSVsaGA9znU-QJz5rbqA",
   authDomain: "kk-esports.firebaseapp.com",
+  databaseURL: "https://kk-esports-default-rtdb.firebaseio.com", 
   projectId: "kk-esports",
   storageBucket: "kk-esports.firebasestorage.app",
   messagingSenderId: "694738469810",
@@ -89,16 +90,16 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 });
 
 document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider));
+document.getElementById('googleSignupBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider));
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
 
-// ================= SPLASH SCREEN 4.5 SECONDS DELAY LOGIC =================
+// ================= SPLASH SCREEN DELAY LOGIC =================
 let isInitialLoad = true;
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
         if (isInitialLoad) {
-            // App khulte hi 4500ms (4.5 seconds) tak logo rukega fir Home page aayega
             setTimeout(() => {
                 showScreen('mainApp');
                 document.getElementById('profileUsername').innerText = user.displayName || "Player";
@@ -112,7 +113,6 @@ onAuthStateChanged(auth, (user) => {
         }
     } else {
         if (isInitialLoad) {
-            // App khulte hi 4500ms (4.5 seconds) tak logo rukega fir Login page aayega
             setTimeout(() => {
                 showScreen('authScreen');
                 isInitialLoad = false;
@@ -123,7 +123,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Profile Pic Change (Basic via URL prompt)
 window.changeProfilePic = function() {
     let newUrl = prompt("Enter new Profile Image URL:");
     if(newUrl && auth.currentUser) {
@@ -184,15 +183,20 @@ onValue(matchesRef, (snapshot) => {
 document.getElementById('updateBannerBtn').addEventListener('click', () => {
     let img = document.getElementById('adminBannerImg').value;
     let link = document.getElementById('adminBannerLink').value;
-    set(bannerRef, { imgUrl: img, linkUrl: link }).then(() => alert("Banner Updated!"));
+    set(bannerRef, { imgUrl: img, linkUrl: link })
+    .then(() => alert("Banner Updated Successfully!"))
+    .catch(e => alert("Error saving banner: " + e.message));
 });
 
 document.getElementById('addMatchBtn').addEventListener('click', () => {
     let fee = parseInt(document.getElementById('adminMatchEntry').value);
     if(!fee || fee <= 0) return alert("Enter valid fee");
-    push(matchesRef, { fee: fee }).then(() => {
+    push(matchesRef, { fee: fee })
+    .then(() => {
         document.getElementById('adminMatchEntry').value = "";
-    });
+        alert("Match Added Successfully!");
+    })
+    .catch(e => alert("Error adding match: " + e.message));
 });
 
 window.deleteMatch = function(matchId) {
