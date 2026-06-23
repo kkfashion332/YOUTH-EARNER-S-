@@ -5,75 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Youth Earner's - Premium Platform</title>
     <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <div id="splashScreen" class="screen active">
         <div class="logo-container animate-logo">
-            <svg class="logo-svg" viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                <defs>
-                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#B8860B" />
-                        <stop offset="15%" stop-color="#FFD700" />
-                        <stop offset="35%" stop-color="#FFF8DC" />
-                        <stop offset="50%" stop-color="#DAA520" />
-                        <stop offset="65%" stop-color="#FFD700" />
-                        <stop offset="85%" stop-color="#B8860B" />
-                        <stop offset="100%" stop-color="#8B6914" />
-                    </linearGradient>
-                    <linearGradient id="textGold" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#F5E6A3" />
-                        <stop offset="30%" stop-color="#D4AF37" />
-                        <stop offset="60%" stop-color="#FFD700" />
-                        <stop offset="100%" stop-color="#B8860B" />
-                    </linearGradient>
-                    <radialGradient id="innerGlow" cx="50%" cy="40%" r="80%">
-                        <stop offset="0%" stop-color="#1A1A1A" />
-                        <stop offset="70%" stop-color="#0A0A0A" />
-                        <stop offset="100%" stop-color="#050505" />
-                    </radialGradient>
-                    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.8" />
-                    </filter>
-                    <filter id="sparkleGlow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="1.5" result="blur" />
-                        <feMerge>
-                            <feMergeNode in="blur" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
-                </defs>
-                <ellipse cx="420" cy="120" rx="415" ry="115" fill="none" stroke="url(#goldGradient)" stroke-width="5" />
-                <ellipse cx="420" cy="120" rx="405" ry="107" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" opacity="0.7" />
-                <ellipse cx="420" cy="120" rx="398" ry="102" fill="url(#innerGlow)" />
-                <path d="M 145 200 C 75 165, 75 75, 145 40" fill="none" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round" opacity="0.95" />
-                <g transform="translate(155, 120)" filter="url(#textShadow)">
-                    <path d="M -50 58 C -95 30, -95 -30, -50 -58" fill="none" stroke="url(#goldGradient)" stroke-width="8" stroke-linecap="round" />
-                    <path d="M -38 -48 L -10 -8 L 18 -48" fill="none" stroke="url(#textGold)" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter" />
-                    <path d="M -10 -8 L -10 52" fill="none" stroke="url(#textGold)" stroke-width="11" stroke-linecap="square" />
-                    <g transform="translate(8, 0)">
-                        <path d="M -6 -48 L 50 -48 L 62 -36" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
-                        <path d="M -6 -8 L 55 -8" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" />
-                        <path d="M -6 32 L 50 32 L 62 20" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
-                        <path d="M -6 -48 L -6 32" fill="none" stroke="url(#textGold)" stroke-width="10" stroke-linecap="square" />
-                    </g>
-                </g>
-                <g transform="translate(200, 62)" filter="url(#sparkleGlow)">
-                    <path d="M 0 -10 L 1.5 -1.5 L 10 0 L 1.5 1.5 L 0 10 L -1.5 1.5 L -10 0 L -1.5 -1.5 Z" fill="#FFF8DC" />
-                    <circle cx="0" cy="0" r="2" fill="#FFD700" />
-                </g>
-                <line x1="300" y1="55" x2="300" y2="185" stroke="url(#goldGradient)" stroke-width="1.5" />
-                <g transform="translate(300, 120)" filter="url(#sparkleGlow)">
-                    <path d="M 0 -12 L 3.5 -3.5 L 12 0 L 3.5 3.5 L 0 12 L -3.5 3.5 L -12 0 L -3.5 -3.5 Z" fill="url(#goldGradient)" />
-                    <circle cx="0" cy="0" r="2" fill="#FFF8DC" />
-                </g>
-                <text x="500" y="118" text-anchor="middle" fill="url(#textGold)" font-family="'Cormorant Garamond', 'Times New Roman', serif" font-size="72" font-weight="400" letter-spacing="12" filter="url(#textShadow)">YOUTH</text>
-                <line x1="380" y1="155" x2="440" y2="155" stroke="url(#goldGradient)" stroke-width="1.5" />
-                <text x="540" y="160" text-anchor="middle" fill="url(#goldGradient)" font-family="'Cormorant Garamond', 'Times New Roman', serif" font-size="28" font-weight="500" letter-spacing="10" filter="url(#textShadow)">EARNER'S</text>
-                <line x1="640" y1="155" x2="700" y2="155" stroke="url(#goldGradient)" stroke-width="1.5" />
-            </svg>
-            <p class="subtitle animate-subtitle">YOUR TRUSTED EARNING PLATFORM</p>
+            <h1 style="color:#FFD700; font-family:'Cormorant Garamond'; font-size:48px; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255,215,0,0.5);">YOUTH EARNER'S</h1>
+            <p class="subtitle animate-subtitle" style="color:#D4AF37; margin-top:15px; font-size:14px;">YOUR TRUSTED EARNING PLATFORM</p>
         </div>
     </div>
 
@@ -81,18 +21,18 @@
         <div class="glass-box">
             <h2 class="auth-title">Welcome Back</h2>
             <div class="input-group">
-                <span class="icon">📞</span>
+                <span class="icon"><i class="fas fa-phone"></i></span>
                 <input type="number" id="phoneInput" placeholder="Mobile Number" />
             </div>
             <div class="input-group">
-                <span class="icon">🔒</span>
+                <span class="icon"><i class="fas fa-lock"></i></span>
                 <input type="password" id="passInput" placeholder="Password" />
             </div>
-            <button id="loginBtn" class="btn-gold">LOGIN</button>
+            <button id="loginBtn" class="btn-gold"><i class="fas fa-sign-in-alt"></i> LOGIN</button>
             <button id="goToSignupBtn" class="btn-outline">CREATE ACCOUNT</button>
             <div class="divider"><span>OR</span></div>
             <button id="googleBtn" class="btn-google">
-                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" style="width: 20px; height: 20px;"> Continue with Google
+                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google"> Continue with Google
             </button>
         </div>
     </div>
@@ -100,19 +40,24 @@
     <div id="signupScreen" class="screen">
         <div class="glass-box">
             <h2 class="auth-title">Create Account</h2>
-            <div class="input-group"><span class="icon">👤</span><input type="text" id="regUsername" placeholder="Username" /></div>
-            <div class="input-group"><span class="icon">📞</span><input type="number" id="regPhone" placeholder="Mobile Number" /></div>
-            <div class="input-group"><span class="icon">🔒</span><input type="password" id="regPass" placeholder="Password" /></div>
-            <button id="finalSignupBtn" class="btn-gold">CREATE ACCOUNT</button>
-            
+            <div class="input-group">
+                <span class="icon"><i class="fas fa-user"></i></span>
+                <input type="text" id="regUsername" placeholder="Full Name" />
+            </div>
+            <div class="input-group">
+                <span class="icon"><i class="fas fa-phone"></i></span>
+                <input type="number" id="regPhone" placeholder="Mobile Number" />
+            </div>
+            <div class="input-group">
+                <span class="icon"><i class="fas fa-lock"></i></span>
+                <input type="password" id="regPass" placeholder="Password" />
+            </div>
+            <button id="finalSignupBtn" class="btn-gold"><i class="fas fa-user-plus"></i> SIGN UP</button>
             <div class="divider"><span>OR</span></div>
             <button id="googleSignupBtn" class="btn-google">
-                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" style="width: 20px; height: 20px;"> Continue with Google
+                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google"> Continue with Google
             </button>
-
-            <p style="text-align: center; margin-top: 15px; font-size: 14px; color: #aaaaaa;">
-                Already have an account? <span id="backToLoginBtn" style="color: #FFD700; cursor: pointer;">Log In</span>
-            </p>
+            <p class="switch-auth-text">Already have an account? <span id="backToLoginBtn">Log In</span></p>
         </div>
     </div>
 
@@ -120,110 +65,163 @@
         
         <header class="app-header">
             <div id="topSmallLogo" class="small-logo">
-                <span style="color:#FFD700; font-family:'Cormorant Garamond'; font-size:20px; font-weight:bold;">YOUTH EARNER'S</span>
+                <span>YOUTH EARNER'S</span>
             </div>
-            <div class="notification-icon">🔔</div>
+            <div class="header-icons">
+                <i class="fas fa-bell notification-icon"></i>
+            </div>
         </header>
 
         <div class="views-container">
             
             <div id="homeView" class="app-view active">
                 <a id="bannerLink" href="#" target="_blank">
-                    <img id="homeBanner" src="https://via.placeholder.com/400x150/141414/FFD700?text=YOUTH+EARNER+BANNER" alt="Promo Banner" class="main-banner">
+                    <img id="homeBanner" src="https://placehold.co/600x200/141414/FFD700?text=YOUTH+EARNER" alt="Promo Banner" class="main-banner">
                 </a>
                 
-                <h3 class="section-title">Available Matches</h3>
+                <div class="section-header">
+                    <h3 class="section-title"><i class="fas fa-gamepad"></i> Cash Battles</h3>
+                    <span class="live-dot">Live</span>
+                </div>
+                
                 <div id="matchList" class="vertical-list">
-                    <p style="text-align:center; color:#888;">Loading Matches...</p>
+                    <p style="text-align:center; color:#888;"><i class="fas fa-spinner fa-spin"></i> Loading Matches...</p>
                 </div>
             </div>
 
-            <div id="contactView" class="app-view">
-                <h2 class="section-title" style="text-align:center;">Contact Us</h2>
-                <div class="contact-grid">
-                    <a href="https://www.instagram.com/k_k_fashion_332?igsh=bTNxa3J4enpydHg1" target="_blank" class="contact-card insta">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Insta">
-                        <span>Instagram</span>
-                    </a>
-                    <a href="https://wa.me/919876543210" target="_blank" class="contact-card whatsapp">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
-                        <span>WhatsApp</span>
-                    </a>
+            <div id="leaderboardView" class="app-view">
+                <h2 class="section-title text-center"><i class="fas fa-trophy"></i> Top Earners</h2>
+                <div class="podium-container">
+                    <div class="podium rank-2"><div class="avatar"><i class="fas fa-user"></i></div><p>Rahul</p><span>₹4,500</span></div>
+                    <div class="podium rank-1"><div class="avatar"><i class="fas fa-crown"></i></div><p>Vikash</p><span>₹8,200</span></div>
+                    <div class="podium rank-3"><div class="avatar"><i class="fas fa-user"></i></div><p>Aman</p><span>₹3,100</span></div>
+                </div>
+                <div class="list-group">
+                    <div class="list-item"><h4>4</h4><p>Priya</p><span class="text-gold">₹2,800</span></div>
+                    <div class="list-item"><h4>5</h4><p>Nitin</p><span class="text-gold">₹1,950</span></div>
                 </div>
             </div>
 
             <div id="walletView" class="app-view">
                 <div class="wallet-balance-card">
                     <p>Total Balance</p>
-                    <h1 style="color:#FFD700;">₹ <span id="walletBalance">0</span></h1>
+                    <h1>₹ <span id="walletBalance">0.00</span></h1>
+                    <p class="winning-text">Winning Balance: ₹0.00</p>
                 </div>
-                <div class="wallet-actions">
-                    <button class="btn-gold" style="width: 48%;">Deposit</button>
-                    <button class="btn-outline" style="width: 48%;">Withdraw</button>
+                
+                <div class="wallet-tabs">
+                    <button class="tab-btn active"><i class="fas fa-plus-circle"></i> Add Cash</button>
+                    <button class="tab-btn"><i class="fas fa-building-columns"></i> Withdraw</button>
                 </div>
-                <h3 class="section-title" style="margin-top:30px;">Recent Transactions</h3>
-                <p style="text-align:center; color:#666;">No transactions yet.</p>
+
+                <div class="wallet-action-area">
+                    <div class="input-group">
+                        <span class="icon">₹</span>
+                        <input type="number" placeholder="Enter Amount" />
+                    </div>
+                    <button class="btn-gold btn-large">PROCEED TO PAY</button>
+                </div>
+
+                <h3 class="section-title mt-20"><i class="fas fa-history"></i> Transactions</h3>
+                <div class="transaction-list">
+                    <div class="list-item">
+                        <div><p>Bonus Added</p><small>Today, 10:30 AM</small></div>
+                        <span class="text-green">+₹50</span>
+                    </div>
+                </div>
             </div>
 
-            <div id="privacyView" class="app-view">
-                <h2 class="section-title">Privacy Policy</h2>
-                <div class="privacy-content">
-                    <p><strong>1. Introduction:</strong> Welcome to Youth Earner's. Your privacy is our top priority. We are committed to protecting your personal information.</p>
-                    <p><strong>2. Information Collection:</strong> We collect your username, mobile number, and payment details strictly for seamless gaming and withdrawal experiences.</p>
-                    <p><strong>3. Data Security:</strong> All data is encrypted and securely stored using Google Firebase servers. We do not sell or share your data with third parties.</p>
-                    <p><strong>4. Fair Play & Anti-Fraud:</strong> Strict monitoring is in place. Any use of hacks, mods, or multiple fake accounts will lead to a permanent ban and forfeiture of wallet balance.</p>
-                    <p><strong>5. Payments:</strong> Withdrawals are processed within 24-48 hours. Ensure your payment details are correct.</p>
+            <div id="referView" class="app-view">
+                <div class="refer-banner">
+                    <i class="fas fa-gift massive-icon"></i>
+                    <h2>Refer & Earn ₹100</h2>
+                    <p>Invite your friends and earn real cash when they play their first match!</p>
                 </div>
+                <div class="refer-code-box">
+                    <span id="myReferCode">YE-84729</span>
+                    <button class="btn-copy"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <button class="btn-gold btn-large mt-20"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
             </div>
 
             <div id="profileView" class="app-view">
                 <div class="profile-header">
-                    <div class="avatar-container" onclick="changeProfilePic()">
-                        <img id="userProfilePic" src="https://via.placeholder.com/100" alt="Avatar">
-                        <div class="edit-overlay">✏️</div>
+                    <div class="avatar-container" id="avatarClicker">
+                        <img id="userProfilePic" src="https://placehold.co/150" alt="Avatar">
+                        <div class="edit-overlay"><i class="fas fa-camera"></i></div>
                     </div>
-                    <h2 id="profileUsername" style="color:#FFD700; margin-top:10px;">Player</h2>
+                    <input type="file" id="imageUploadInput" accept="image/*" style="display:none;">
+                    <p id="uploadStatus" style="color:#10b981; font-size:12px; display:none;">Uploading...</p>
+                    
+                    <div class="name-edit-group">
+                        <input type="text" id="profileUsernameInput" value="Player" disabled />
+                        <button id="editNameBtn"><i class="fas fa-pencil-alt"></i></button>
+                        <button id="saveNameBtn" style="display:none; color:#10b981;"><i class="fas fa-check"></i></button>
+                    </div>
+                    <p class="user-phone" id="profilePhoneDisplay">+91 **********</p>
                 </div>
                 
+                <div class="profile-stats">
+                    <div class="stat-box"><h3>12</h3><p>Matches</p></div>
+                    <div class="stat-box"><h3>8</h3><p>Wins</p></div>
+                    <div class="stat-box"><h3 class="text-gold">₹450</h3><p>Earned</p></div>
+                </div>
+
                 <div class="profile-menu">
-                    <div class="menu-item nav-trigger" data-target="contactView">📞 Contact Support <span>></span></div>
-                    <div class="menu-item nav-trigger" data-target="privacyView">📜 Privacy Policy <span>></span></div>
-                    <div class="menu-item" id="logoutBtn" style="color:#ef4444;">🚪 Logout <span>></span></div>
+                    <div class="menu-item nav-trigger" data-target="contactView"><i class="fas fa-headset"></i> Help & Support <i class="fas fa-chevron-right arrow"></i></div>
+                    <div class="menu-item nav-trigger" data-target="privacyView"><i class="fas fa-shield-alt"></i> Privacy Policy <i class="fas fa-chevron-right arrow"></i></div>
+                    <div class="menu-item" id="logoutBtn" style="color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout <i class="fas fa-chevron-right arrow"></i></div>
                 </div>
             </div>
 
+            <div id="contactView" class="app-view">
+                <h2 class="section-title text-center">Contact Us</h2>
+                <div class="contact-grid">
+                    <a href="https://www.instagram.com/k_k_fashion_332?igsh=bTNxa3J4enpydHg1" target="_blank" class="contact-card insta"><i class="fab fa-instagram massive-icon"></i><span>Instagram</span></a>
+                    <a href="https://wa.me/919876543210" target="_blank" class="contact-card whatsapp"><i class="fab fa-whatsapp massive-icon"></i><span>WhatsApp</span></a>
+                </div>
+            </div>
+            <div id="privacyView" class="app-view">
+                <h2 class="section-title">Privacy Policy</h2>
+                <div class="privacy-content"><p>Your data is secured with high-end encryption...</p></div>
+            </div>
+
             <div id="adminView" class="app-view">
-                <h2 style="color:#ef4444; text-align:center;">ADMIN PANEL</h2>
+                <h2 class="text-center" style="color:#ef4444;"><i class="fas fa-user-shield"></i> ADMIN PANEL</h2>
                 
                 <div class="admin-box">
-                    <h3 style="color:#FFD700;">Update Banner</h3>
-                    <input type="text" id="adminBannerImg" placeholder="Banner Image URL">
-                    <input type="text" id="adminBannerLink" placeholder="Banner Click Link (URL)">
+                    <h3 class="text-gold"><i class="fas fa-image"></i> Update Banner</h3>
+                    <input type="text" id="adminBannerImg" placeholder="Image URL">
+                    <input type="text" id="adminBannerLink" placeholder="Click Link (URL)">
                     <button class="btn-gold" id="updateBannerBtn">Save Banner</button>
                 </div>
 
-                <div class="admin-box" style="margin-top:20px;">
-                    <h3 style="color:#FFD700;">Add New Match</h3>
-                    <input type="number" id="adminMatchEntry" placeholder="Entry Fee (e.g., 50)">
-                    <button class="btn-outline" id="addMatchBtn">Add Match</button>
+                <div class="admin-box mt-20">
+                    <h3 class="text-gold"><i class="fas fa-plus-square"></i> Add Match</h3>
+                    <input type="number" id="adminMatchEntry" placeholder="Entry Fee (e.g. 20)">
+                    <input type="number" id="adminMatchPrize" placeholder="Winning Prize (e.g. 36)">
+                    <button class="btn-outline" id="addMatchBtn">Post Match</button>
                 </div>
 
-                <div id="adminMatchList" class="vertical-list" style="margin-top:20px;">
-                </div>
+                <h3 class="mt-20 text-gold">Live Matches</h3>
+                <div id="adminMatchList" class="vertical-list"></div>
             </div>
 
         </div>
 
         <nav class="bottom-nav">
-            <div class="nav-item active" data-target="homeView">🏠<br><span>Home</span></div>
-            <div class="nav-item" data-target="contactView">📞<br><span>Contact</span></div>
+            <div class="nav-item active" data-target="homeView"><i class="fas fa-home nav-icon"></i><span>Home</span></div>
+            <div class="nav-item" data-target="leaderboardView"><i class="fas fa-chart-simple nav-icon"></i><span>Leaders</span></div>
             
             <div class="wallet-center nav-item" data-target="walletView">
-                <div class="wallet-btn">💰<br>Wallet</div>
+                <div class="wallet-btn">
+                    <i class="fas fa-wallet" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <span>Wallet</span>
+                </div>
             </div>
 
-            <div class="nav-item" data-target="privacyView">📜<br><span>Privacy</span></div>
-            <div class="nav-item" data-target="profileView">👤<br><span>Profile</span></div>
+            <div class="nav-item" data-target="referView"><i class="fas fa-share-nodes nav-icon"></i><span>Refer</span></div>
+            <div class="nav-item" data-target="profileView"><i class="fas fa-user nav-icon"></i><span>Profile</span></div>
         </nav>
     </div>
 
