@@ -1,7 +1,6 @@
-// IMPORT FIREBASE SDKs 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref as dbRef, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref as dbRef, set, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGncZ4cm-VUA_zSVsaGA9znU-QJz5rbqA",
@@ -18,8 +17,13 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ================= NAVIGATION LOGIC =================
-const screens = ['splashScreen', 'authScreen', 'signupScreen', 'mainApp'];
+// ================= THEME TOGGLE =================
+document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    document.body.classList.toggle('light-theme');
+});
+
+// ================= NAVIGATION =================
+const screens = ['splashScreen', 'authScreen', 'signupScreen', 'mainApp', 'matchDetailsOverlay', 'matchingOverlay'];
 function showScreen(screenId) {
     screens.forEach(s => document.getElementById(s).classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -47,6 +51,17 @@ document.querySelectorAll('.nav-trigger').forEach(trigger => {
     });
 });
 
+// Wallet Tabs
+document.getElementById('tabDeposit').addEventListener('click', (e) => {
+    e.target.classList.add('active'); document.getElementById('tabWithdraw').classList.remove('active');
+    document.getElementById('depositArea').style.display = 'block'; document.getElementById('withdrawArea').style.display = 'none';
+});
+document.getElementById('tabWithdraw').addEventListener('click', (e) => {
+    e.target.classList.add('active'); document.getElementById('tabDeposit').classList.remove('active');
+    document.getElementById('withdrawArea').style.display = 'block'; document.getElementById('depositArea').style.display = 'none';
+});
+
+
 // ================= ADMIN PANEL (7 TAPS) =================
 let tapCount = 0; let tapTimer;
 document.getElementById('topSmallLogo').addEventListener('click', () => {
@@ -59,23 +74,49 @@ document.getElementById('topSmallLogo').addEventListener('click', () => {
     }
 });
 
-// ================= AUTHENTICATION =================
+// ================= AUTHENTICATION & REFERRAL =================
 document.getElementById('goToSignupBtn').addEventListener('click', () => showScreen('signupScreen'));
 document.getElementById('backToLoginBtn').addEventListener('click', () => showScreen('authScreen'));
 function getFakeEmail(num) { return num.trim() + "@youthearners.com"; }
 
-document.getElementById('finalSignupBtn').addEventListener('click', () => {
+document.getElementById('finalSignupBtn').addEventListener('click', async () => {
     const user = document.getElementById('regUsername').value;
     const phone = document.getElementById('regPhone').value;
     const pass = document.getElementById('regPass').value;
-    if(!user || phone.length < 10 || pass.length < 6) return alert("Fill correctly (Phone 10 digits, Pass 6 chars)");
+    const referCode = document.getElementById('regReferCode').value.trim();
     
-    // Assigning a realistic default profile pic so it doesn't look broken
+    if(!user || phone.length < 10 || pass.length < 6) return alert("Fill correctly!");
     const defaultPic = "https://ui-avatars.com/api/?name=" + user + "&background=FFD700&color=000&size=150";
 
-    createUserWithEmailAndPassword(auth, getFakeEmail(phone), pass).then((cred) => {
-        updateProfile(cred.user, { displayName: user, photoURL: defaultPic });
-    }).catch(e => alert(e.message));
+    try {
+        const cred = await createUserWithEmailAndPassword(auth, getFakeEmail(phone), pass);
+        await updateProfile(cred.user, { displayName: user, photoURL: defaultPic });
+        
+        let startBalance = 0;
+        
+        // Referral Logic
+        if(referCode) {
+            const codeRef = dbRef(db, `youth_earners/referrals/${referCode}`);
+            const codeSnap = await get(codeRef);
+            if(codeSnap.exists()) {
+                const referrerUid = codeSnap.val();
+                // Add Rs 5 to referrer
+                const refBalRef = dbRef(db, `youth_earners/users/${referrerUid}/balance`);
+                const refBalSnap = await get(refBalRef);
+                let currentRefBal = refBalSnap.exists() ? refBalSnap.val() : 0;
+                await set(refBalRef, currentRefBal + 5);
+                startBalance = 4; // New user gets Rs 4
+            }
+        }
+        
+        // Setup User Node
+        await set(dbRef(db, `youth_earners/users/${cred.user.uid}`), {
+            balance: startBalance,
+            phone: phone,
+            myCode: "YE-" + Math.floor(10000 + Math.random() * 90000)
+        });
+        
+    } catch(e) { alert(e.message); }
 });
 
 document.getElementById('loginBtn').addEventListener('click', () => {
@@ -89,116 +130,121 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 });
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// ================= INIT APP & LOAD USER DATA =================
+// ================= INIT APP =================
 let isInitialLoad = true;
+let currentUserObj = null;
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
+        currentUserObj = user;
         setTimeout(() => {
             showScreen('mainApp');
-            // Populate Profile Data
             document.getElementById('profileUsernameInput').value = user.displayName || "Player";
             document.getElementById('profilePhoneDisplay').innerText = user.email ? user.email.replace('@youthearners.com', '') : "Google User";
-            if(user.photoURL) {
-                document.getElementById('userProfilePic').src = user.photoURL;
-            } else {
-                document.getElementById('userProfilePic').src = "https://ui-avatars.com/api/?name=Player&background=FFD700&color=000&size=150";
-            }
+            document.getElementById('userProfilePic').src = user.photoURL || "https://ui-avatars.com/api/?name=Player&background=FFD700";
+            document.getElementById('matchMyPic').src = user.photoURL || "https://ui-avatars.com/api/?name=Player&background=FFD700";
+            document.getElementById('matchMyName').innerText = user.displayName || "Player";
+            
+            // Listen to Balance & Code
+            onValue(dbRef(db, `youth_earners/users/${user.uid}`), (snap) => {
+                if(snap.exists()) {
+                    let d = snap.val();
+                    let bal = d.balance || 0;
+                    document.getElementById('headerBal').innerText = bal;
+                    document.getElementById('walletPageBal').innerText = bal;
+                    document.getElementById('myReferCode').innerText = d.myCode || "No Code";
+                    
+                    // Save my code to referrals list
+                    if(d.myCode) set(dbRef(db, `youth_earners/referrals/${d.myCode}`), user.uid);
+                } else {
+                    // Create if Google Login
+                    let newCode = "YE-" + Math.floor(10000 + Math.random() * 90000);
+                    set(dbRef(db, `youth_earners/users/${user.uid}`), { balance: 0, myCode: newCode });
+                }
+            });
             isInitialLoad = false;
-        }, isInitialLoad ? 3500 : 0); 
+        }, isInitialLoad ? 2000 : 0); 
     } else {
-        setTimeout(() => { showScreen('authScreen'); isInitialLoad = false; }, isInitialLoad ? 3500 : 0);
+        setTimeout(() => { showScreen('authScreen'); isInitialLoad = false; }, isInitialLoad ? 2000 : 0);
     }
 });
 
-// ================= PROFILE: EDIT NAME & BULLETPROOF GALLERY UPLOAD =================
+// Profile Editing
 const nameInput = document.getElementById('profileUsernameInput');
 const editBtn = document.getElementById('editNameBtn');
 const saveBtn = document.getElementById('saveNameBtn');
 
-editBtn.addEventListener('click', () => {
-    nameInput.disabled = false;
-    nameInput.focus();
-    editBtn.style.display = 'none';
-    saveBtn.style.display = 'inline-block';
-});
-
+editBtn.addEventListener('click', () => { nameInput.disabled = false; nameInput.focus(); editBtn.style.display = 'none'; saveBtn.style.display = 'inline-block'; });
 saveBtn.addEventListener('click', () => {
-    let newName = nameInput.value.trim();
-    if(newName && auth.currentUser) {
-        updateProfile(auth.currentUser, { displayName: newName }).then(() => {
-            nameInput.disabled = true;
-            saveBtn.style.display = 'none';
-            editBtn.style.display = 'inline-block';
-            alert("Name updated successfully!");
+    if(nameInput.value.trim() && auth.currentUser) {
+        updateProfile(auth.currentUser, { displayName: nameInput.value.trim() }).then(() => {
+            nameInput.disabled = true; saveBtn.style.display = 'none'; editBtn.style.display = 'inline-block'; alert("Name updated!");
         });
     }
 });
 
-// 100% Working Gallery Upload (Base64 Compression bypasses Firebase Storage Rules)
 const avatarClicker = document.getElementById('avatarClicker');
 const imageUploadInput = document.getElementById('imageUploadInput');
 const uploadStatus = document.getElementById('uploadStatus');
 
 avatarClicker.addEventListener('click', () => imageUploadInput.click());
-
 imageUploadInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    if(!file) return;
-    if(!auth.currentUser) return alert("Please login first");
-
+    if(!file || !auth.currentUser) return;
     uploadStatus.style.display = 'block';
-    uploadStatus.innerText = 'Compressing & Uploading...';
-
+    
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function(event) {
-        const img = new Image();
-        img.src = event.target.result;
+        const img = new Image(); img.src = event.target.result;
         img.onload = function() {
-            // Compress Image so it saves instantly
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 150; 
-            canvas.height = 150;
-            ctx.drawImage(img, 0, 0, 150, 150);
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = 150; canvas.height = 150; ctx.drawImage(img, 0, 0, 150, 150);
             const base64String = canvas.toDataURL('image/jpeg', 0.6); 
-
-            // Save to Profile
             updateProfile(auth.currentUser, { photoURL: base64String }).then(() => {
                 document.getElementById('userProfilePic').src = base64String;
+                document.getElementById('matchMyPic').src = base64String;
                 uploadStatus.style.display = 'none';
-                alert("Profile picture updated successfully!");
-            }).catch((error) => {
-                uploadStatus.style.display = 'none';
-                alert("Error: " + error.message);
+                alert("Profile picture updated!");
             });
         }
     };
 });
 
-// ================= REALTIME DATABASE (MATCHES & BANNER) =================
-const matchesRef = dbRef(db, 'youth_earners/matches');
+// ================= DATABASE (BANNER, MATCHES, CATEGORIES) =================
 const bannerRef = dbRef(db, 'youth_earners/banner');
-
-// Load Banner
-onValue(bannerRef, (snapshot) => {
-    const data = snapshot.val();
-    if(data && data.imgUrl) {
-        document.getElementById('homeBanner').src = data.imgUrl;
-        document.getElementById('bannerLink').href = data.linkUrl;
+onValue(bannerRef, (snap) => {
+    if(snap.exists() && snap.val().imgUrl) {
+        document.getElementById('homeBanner').src = snap.val().imgUrl;
+        document.getElementById('bannerLink').href = snap.val().linkUrl || "#";
     }
 });
 
-// Load Matches (Using ₹ Symbol)
-onValue(matchesRef, (snapshot) => {
-    const data = snapshot.val();
-    const matchList = document.getElementById('matchList');
-    const adminMatchList = document.getElementById('adminMatchList');
-    matchList.innerHTML = ""; adminMatchList.innerHTML = "";
+let currentCategory = "1v1";
+const catBtns = document.querySelectorAll('.cat-btn');
+catBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCategory = e.target.getAttribute('data-cat');
+        renderMatches();
+    });
+});
 
-    if(data) {
-        let matchesArr = Object.entries(data).sort((a,b) => a[1].fee - b[1].fee);
-        matchesArr.forEach(([id, match]) => {
+let allMatches = {};
+onValue(dbRef(db, 'youth_earners/matches'), (snap) => {
+    allMatches = snap.exists() ? snap.val() : {};
+    renderMatches();
+});
+
+function renderMatches() {
+    const matchList = document.getElementById('matchList');
+    matchList.innerHTML = "";
+    let hasMatches = false;
+    
+    Object.entries(allMatches).sort((a,b) => a[1].fee - b[1].fee).forEach(([id, match]) => {
+        if(match.cat === currentCategory) {
+            hasMatches = true;
             matchList.innerHTML += `
                 <div class="match-card">
                     <div class="match-info">
@@ -206,35 +252,149 @@ onValue(matchesRef, (snapshot) => {
                         <div class="prize-box"><p>Winning Prize</p><h3>₹${match.prize}</h3></div>
                     </div>
                     <div class="match-footer">
-                        <span class="player-type"><i class="fas fa-user-friends"></i> 1 VS 1 Battle</span>
-                        <button class="play-btn" onclick="alert('Joining Match for ₹${match.fee}...')">PLAY NOW</button>
+                        <span class="player-type"><i class="fas fa-users"></i> ${match.cat.toUpperCase()} Battle</span>
+                        <button class="play-btn" onclick="openMatchDetails(${match.fee}, ${match.prize}, '${match.cat}')">PLAY NOW</button>
                     </div>
                 </div>`;
-            
-            adminMatchList.innerHTML += `
-                <div style="background:#222; padding:10px; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Fee: ₹${match.fee} | Win: ₹${match.prize}</span>
-                    <button onclick="deleteMatch('${id}')" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">Delete</button>
-                </div>`;
-        });
-    } else {
-        matchList.innerHTML = "<p class='text-center text-muted'>No active battles right now.</p>";
-    }
+        }
+    });
+    if(!hasMatches) matchList.innerHTML = "<p class='text-center text-muted'>No battles in this category.</p>";
+}
+
+// ================= MATCHMAKING LOGIC (WINZO STYLE) =================
+window.openMatchDetails = function(fee, prize, cat) {
+    document.getElementById('mdEntry').innerText = "₹" + fee;
+    document.getElementById('mdPrize').innerText = "₹" + prize;
+    document.getElementById('mdCat').innerText = cat.toUpperCase() + " BATTLE";
+    document.getElementById('matchDetailsOverlay').classList.add('active');
+}
+document.getElementById('closeMatchDetails').addEventListener('click', () => {
+    document.getElementById('matchDetailsOverlay').classList.remove('active');
 });
 
-// Admin Actions
-document.getElementById('addMatchBtn').addEventListener('click', () => {
-    let fee = parseInt(document.getElementById('adminMatchEntry').value);
-    let prize = parseInt(document.getElementById('adminMatchPrize').value);
-    if(!fee || !prize) return alert("Enter both Fee and Prize amount!");
+document.getElementById('startMatchmakingBtn').addEventListener('click', () => {
+    document.getElementById('matchDetailsOverlay').classList.remove('active');
+    document.getElementById('matchingOverlay').classList.add('active');
     
-    push(matchesRef, { fee: fee, prize: prize }).then(() => {
-        document.getElementById('adminMatchEntry').value = "";
-        document.getElementById('adminMatchPrize').value = "";
-        alert("Match Posted Live!");
+    // Start Slot Animation
+    const strip = document.getElementById('slotStrip');
+    strip.classList.remove('spin-anim');
+    void strip.offsetWidth; // trigger reflow
+    strip.classList.add('spin-anim');
+    document.getElementById('matchOppName').innerText = "Searching...";
+    
+    setTimeout(() => {
+        document.getElementById('matchOppName').innerText = "Player " + Math.floor(Math.random()*999);
+        setTimeout(() => {
+            alert("Match Started! Code goes to Game Screen here.");
+            document.getElementById('matchingOverlay').classList.remove('active');
+        }, 1500);
+    }, 3000); // 3 seconds matching time
+});
+
+
+// ================= WALLET REQUESTS (DEPOSIT / WITHDRAW) =================
+document.getElementById('submitDepositBtn').addEventListener('click', () => {
+    let amt = parseInt(document.getElementById('depAmount').value);
+    let utr = document.getElementById('depUtr').value.trim();
+    if(!amt || !utr || utr.length < 10) return alert("Enter valid Amount and UTR Number.");
+    
+    push(dbRef(db, 'youth_earners/requests/deposits'), {
+        uid: currentUserObj.uid, name: currentUserObj.displayName, amount: amt, utr: utr, time: new Date().toLocaleString()
+    }).then(() => {
+        alert("Deposit Request Sent to Admin!");
+        document.getElementById('depAmount').value = ""; document.getElementById('depUtr').value = "";
     });
 });
 
-window.deleteMatch = function(matchId) {
-    if(confirm("Remove this match?")) remove(dbRef(db, `youth_earners/matches/${matchId}`));
+document.getElementById('submitWithdrawBtn').addEventListener('click', async () => {
+    let amt = parseInt(document.getElementById('withAmount').value);
+    let method = document.getElementById('withMethod').value;
+    let details = document.getElementById('withDetails').value.trim();
+    
+    if(!amt || !details) return alert("Fill all details.");
+    
+    // Check balance
+    const balSnap = await get(dbRef(db, `youth_earners/users/${currentUserObj.uid}/balance`));
+    let currentBal = balSnap.exists() ? balSnap.val() : 0;
+    if(currentBal < amt) return alert("Insufficient Balance!");
+    
+    push(dbRef(db, 'youth_earners/requests/withdrawals'), {
+        uid: currentUserObj.uid, name: currentUserObj.displayName, amount: amt, method: method, details: details, time: new Date().toLocaleString()
+    }).then(() => {
+        alert("Withdrawal Request Sent!");
+        document.getElementById('withAmount').value = ""; document.getElementById('withDetails').value = "";
+    });
+});
+
+
+// ================= ADMIN ACTIONS =================
+document.getElementById('updateBannerBtn').addEventListener('click', () => {
+    let img = document.getElementById('adminBannerImg').value;
+    let link = document.getElementById('adminBannerLink').value;
+    set(bannerRef, { imgUrl: img, linkUrl: link }).then(() => alert("Banner Live!"));
+});
+
+document.getElementById('addMatchBtn').addEventListener('click', () => {
+    let cat = document.getElementById('adminMatchCat').value;
+    let fee = parseInt(document.getElementById('adminMatchEntry').value);
+    let prize = parseInt(document.getElementById('adminMatchPrize').value);
+    if(!fee || !prize) return alert("Enter Fee and Prize!");
+    push(dbRef(db, 'youth_earners/matches'), { cat: cat, fee: fee, prize: prize }).then(() => {
+        document.getElementById('adminMatchEntry').value = ""; document.getElementById('adminMatchPrize').value = ""; alert("Match Posted!");
+    });
+});
+
+// Admin Approval Views
+onValue(dbRef(db, 'youth_earners/requests/deposits'), (snap) => {
+    const list = document.getElementById('adminDepositList');
+    list.innerHTML = "";
+    if(snap.exists()) {
+        Object.entries(snap.val()).forEach(([reqId, req]) => {
+            list.innerHTML += `
+            <div class="admin-req-card">
+                <p><b>${req.name}</b> requests <b>₹${req.amount}</b></p>
+                <p>UTR: ${req.utr}</p>
+                <button onclick="approveDeposit('${reqId}', '${req.uid}', ${req.amount})">Approve</button>
+            </div>`;
+        });
+    } else { list.innerHTML = "<p class='text-muted'>No requests</p>"; }
+});
+
+window.approveDeposit = async function(reqId, uid, amount) {
+    const userBalRef = dbRef(db, `youth_earners/users/${uid}/balance`);
+    const snap = await get(userBalRef);
+    let bal = snap.exists() ? snap.val() : 0;
+    await set(userBalRef, bal + amount);
+    await remove(dbRef(db, `youth_earners/requests/deposits/${reqId}`));
+    alert("Approved & Added to User Wallet!");
+}
+
+onValue(dbRef(db, 'youth_earners/requests/withdrawals'), (snap) => {
+    const list = document.getElementById('adminWithdrawList');
+    list.innerHTML = "";
+    if(snap.exists()) {
+        Object.entries(snap.val()).forEach(([reqId, req]) => {
+            list.innerHTML += `
+            <div class="admin-req-card" style="border-left-color: #3b82f6;">
+                <p><b>${req.name}</b> withdraws <b>₹${req.amount}</b></p>
+                <p>${req.method.toUpperCase()}: ${req.details}</p>
+                <button onclick="approveWithdraw('${reqId}', '${req.uid}', ${req.amount})">Mark Paid & Deduct</button>
+            </div>`;
+        });
+    } else { list.innerHTML = "<p class='text-muted'>No requests</p>"; }
+});
+
+window.approveWithdraw = async function(reqId, uid, amount) {
+    const userBalRef = dbRef(db, `youth_earners/users/${uid}/balance`);
+    const snap = await get(userBalRef);
+    let bal = snap.exists() ? snap.val() : 0;
+    if(bal >= amount) {
+        await set(userBalRef, bal - amount);
+        await remove(dbRef(db, `youth_earners/requests/withdrawals/${reqId}`));
+        alert("Deducted & Marked Paid!");
+    } else {
+        alert("User doesn't have enough balance anymore!");
+        await remove(dbRef(db, `youth_earners/requests/withdrawals/${reqId}`));
+    }
 }
