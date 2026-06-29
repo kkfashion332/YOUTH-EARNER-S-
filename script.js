@@ -69,7 +69,6 @@ document.getElementById('tabWithdraw').addEventListener('click', (e) => {
     document.getElementById('withdrawArea').style.display = 'block'; document.getElementById('depositArea').style.display = 'none';
 });
 
-
 // ================= ADMIN PANEL PIN =================
 let adminPin = "7878";
 onValue(dbRef(db, 'youth_earners/settings/adminPin'), snap => {
@@ -190,7 +189,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Profile Editing
+// Profile Editing & Gallery Upload
 const nameInput = document.getElementById('profileUsernameInput');
 const editBtn = document.getElementById('editNameBtn');
 const saveBtn = document.getElementById('saveNameBtn');
@@ -204,7 +203,6 @@ saveBtn.addEventListener('click', () => {
     }
 });
 
-// Direct Image Upload (No Alert unless error)
 const avatarClicker = document.getElementById('avatarClicker');
 const imageUploadInput = document.getElementById('imageUploadInput');
 const uploadStatus = document.getElementById('uploadStatus');
@@ -235,10 +233,11 @@ imageUploadInput.addEventListener('change', (e) => {
     };
 });
 
-// ================= MULTIPLE BANNERS CAROUSEL =================
+// ================= MULTIPLE BANNERS CAROUSEL & SWIPE =================
 const bannerRef = dbRef(db, 'youth_earners/banners');
 let allBanners = [];
 let bannerTimer;
+let currentBannerIdx = 0;
 
 onValue(bannerRef, (snap) => {
     allBanners = [];
@@ -257,6 +256,16 @@ onValue(bannerRef, (snap) => {
     renderCarousel();
 });
 
+function updateSlide() {
+    if(allBanners.length === 0) return;
+    const slide = document.getElementById('carouselSlide');
+    slide.style.transform = `translateX(-${currentBannerIdx * 100}%)`;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+        if(i === currentBannerIdx) d.classList.add('active');
+        else d.classList.remove('active');
+    });
+}
+
 function renderCarousel() {
     const slide = document.getElementById('carouselSlide');
     const dots = document.getElementById('carouselDots');
@@ -272,17 +281,44 @@ function renderCarousel() {
         dots.innerHTML += `<span class="dot ${i===0?'active':''}"></span>`;
     });
     
-    let currentIdx = 0;
+    currentBannerIdx = 0;
+    startBannerTimer();
+}
+
+function startBannerTimer() {
     clearInterval(bannerTimer);
     bannerTimer = setInterval(() => {
-        currentIdx = (currentIdx + 1) % allBanners.length;
-        slide.style.transform = `translateX(-${currentIdx * 100}%)`;
-        document.querySelectorAll('.dot').forEach((d, i) => {
-            if(i === currentIdx) d.classList.add('active');
-            else d.classList.remove('active');
-        });
+        if(allBanners.length > 0) {
+            currentBannerIdx = (currentBannerIdx + 1) % allBanners.length;
+            updateSlide();
+        }
     }, 3000);
 }
+
+// Swipe Logic for Banners
+const carouselContainer = document.querySelector('.carousel-container');
+let touchstartX = 0;
+let touchendX = 0;
+
+carouselContainer.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+    clearInterval(bannerTimer); // Pause timer on touch
+});
+
+carouselContainer.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    if(allBanners.length > 0) {
+        if (touchendX < touchstartX - 40) { // Swiped Left (Next)
+            currentBannerIdx = (currentBannerIdx + 1) % allBanners.length;
+            updateSlide();
+        }
+        if (touchendX > touchstartX + 40) { // Swiped Right (Prev)
+            currentBannerIdx = (currentBannerIdx - 1 + allBanners.length) % allBanners.length;
+            updateSlide();
+        }
+    }
+    startBannerTimer(); // Resume timer
+});
 
 document.getElementById('addBannerBtn').addEventListener('click', () => {
     let img = document.getElementById('adminBannerImg').value;
@@ -300,7 +336,7 @@ window.deleteBanner = function(id) {
     if(confirm("Remove this banner?")) remove(dbRef(db, `youth_earners/banners/${id}`));
 }
 
-// ================= MATCHES (No Categories) =================
+// ================= MATCHES (Home rendering & Admin Delete) =================
 let allMatches = {};
 onValue(dbRef(db, 'youth_earners/matches'), (snap) => {
     allMatches = snap.exists() ? snap.val() : {};
@@ -309,11 +345,16 @@ onValue(dbRef(db, 'youth_earners/matches'), (snap) => {
 
 function renderMatches() {
     const matchList = document.getElementById('matchList');
+    const adminMatchList = document.getElementById('adminMatchList'); // Used in Admin Panel
     matchList.innerHTML = "";
+    if(adminMatchList) adminMatchList.innerHTML = "";
+    
     let hasMatches = false;
     
     Object.entries(allMatches).sort((a,b) => a[1].fee - b[1].fee).forEach(([id, match]) => {
         hasMatches = true;
+        
+        // 1. Home Page List
         matchList.innerHTML += `
             <div class="match-card">
                 <div class="match-info">
@@ -324,8 +365,37 @@ function renderMatches() {
                     <button class="play-btn" onclick="openMatchDetails(${match.fee}, ${match.prize})">PLAY NOW</button>
                 </div>
             </div>`;
+            
+        // 2. Admin Panel List (For Deletion)
+        if(adminMatchList) {
+            adminMatchList.innerHTML += `
+            <div class="admin-req-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>Entry: ₹${match.fee} | Win: ₹${match.prize}</span>
+                <button style="background:var(--danger); margin:0; width:auto; padding:5px 15px;" onclick="deleteMatch('${id}')">Delete</button>
+            </div>`;
+        }
     });
-    if(!hasMatches) matchList.innerHTML = "<p class='text-center text-muted'>No battles active right now.</p>";
+    
+    if(!hasMatches) {
+        matchList.innerHTML = "<p class='text-center text-muted'>No battles active right now.</p>";
+        if(adminMatchList) adminMatchList.innerHTML = "<p class='text-muted'>No matches to delete.</p>";
+    }
+}
+
+// Admin Match Post & Delete
+document.getElementById('addMatchBtn').addEventListener('click', () => {
+    let fee = parseInt(document.getElementById('adminMatchEntry').value);
+    let prize = parseInt(document.getElementById('adminMatchPrize').value);
+    if(!fee || !prize) return alert("Enter Fee and Prize!");
+    push(dbRef(db, 'youth_earners/matches'), { fee: fee, prize: prize }).then(() => {
+        document.getElementById('adminMatchEntry').value = ""; document.getElementById('adminMatchPrize').value = ""; alert("Match Posted!");
+    });
+});
+
+window.deleteMatch = function(matchId) {
+    if(confirm("Are you sure you want to delete this match?")) {
+        remove(dbRef(db, `youth_earners/matches/${matchId}`));
+    }
 }
 
 // ================= MATCHMAKING LOGIC =================
@@ -358,7 +428,7 @@ document.getElementById('startMatchmakingBtn').addEventListener('click', () => {
 });
 
 
-// ================= FAKE TOAST POPUPS (DEPOSIT & WITHDRAW) =================
+// ================= FAKE TOAST POPUPS =================
 const fakeNames = ["Rahul", "Amit", "Priya", "Vikash", "Neha", "Rohan", "Sneha", "Karan", "Aman", "Ritu", "Faizan", "Rohit"];
 setInterval(() => {
     if(document.getElementById('walletView').classList.contains('active')) {
@@ -407,16 +477,7 @@ document.getElementById('submitWithdrawBtn').addEventListener('click', async () 
     });
 });
 
-// ================= ADMIN ACTIONS =================
-document.getElementById('addMatchBtn').addEventListener('click', () => {
-    let fee = parseInt(document.getElementById('adminMatchEntry').value);
-    let prize = parseInt(document.getElementById('adminMatchPrize').value);
-    if(!fee || !prize) return alert("Enter Fee and Prize!");
-    push(dbRef(db, 'youth_earners/matches'), { fee: fee, prize: prize }).then(() => {
-        document.getElementById('adminMatchEntry').value = ""; document.getElementById('adminMatchPrize').value = ""; alert("Match Posted!");
-    });
-});
-
+// Admin Approval Views
 onValue(dbRef(db, 'youth_earners/requests/deposits'), (snap) => {
     const list = document.getElementById('adminDepositList'); list.innerHTML = "";
     if(snap.exists()) {
