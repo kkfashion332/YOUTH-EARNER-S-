@@ -77,8 +77,8 @@
     <div id="mainApp" class="screen main-app-container">
         
         <header class="app-header">
-            <div id="topSmallLogo" class="small-logo" style="width: 100px; cursor: pointer;">
-                <svg class="logo-svg" viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: auto;">
+            <div id="topSmallLogo" class="small-logo animated-header-logo">
+                <svg class="logo-svg" viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width: 100%; height: 100%;">
                     <defs>
                         <linearGradient id="gGS" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#B8860B" /><stop offset="15%" stop-color="#FFD700" /><stop offset="100%" stop-color="#8B6914" /></linearGradient>
                         <linearGradient id="tGS" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F5E6A3" /><stop offset="100%" stop-color="#B8860B" /></linearGradient>
@@ -108,17 +108,22 @@
         <div class="views-container">
             
             <div id="homeView" class="app-view active">
-                <a id="bannerLink" href="#" target="_blank">
-                    <img id="homeBanner" src="https://placehold.co/600x200/141414/FFD700?text=YOUTH+EARNER" alt="Promo Banner" class="main-banner">
-                </a>
                 
-                <div class="category-tabs">
-                    <button class="cat-btn active" data-cat="1v1">1 VS 1</button>
-                    <button class="cat-btn" data-cat="2v2">2 VS 2</button>
-                    <button class="cat-btn" data-cat="4v4">4 VS 4</button>
+                <div class="carousel-container">
+                    <div class="carousel-slide" id="carouselSlide">
+                        <a href="#"><img src="https://placehold.co/600x250/141414/FFD700?text=YOUTH+EARNER" alt="Promo"></a>
+                    </div>
+                    <div class="carousel-dots" id="carouselDots">
+                        <span class="dot active"></span>
+                    </div>
                 </div>
                 
-                <div id="matchList" class="vertical-list" style="margin-top: 15px;">
+                <div class="section-header" style="margin-top: 20px;">
+                    <h3 class="section-title"><i class="fas fa-gamepad"></i> Cash Battles</h3>
+                    <span class="live-dot">Live</span>
+                </div>
+                
+                <div id="matchList" class="vertical-list">
                     <p style="text-align:center; color:#888;"><i class="fas fa-spinner fa-spin"></i> Loading Matches...</p>
                 </div>
             </div>
@@ -126,35 +131,35 @@
             <div id="leaderboardView" class="app-view">
                 <h2 class="section-title text-center"><i class="fas fa-trophy"></i> Top Earners</h2>
                 <div class="leaderboard-list">
-                    <div class="lb-row rank-1"><span class="lb-rank">1</span><img src="https://i.pravatar.cc/100?img=11" class="lb-avatar"><span class="lb-name">Vikash</span><span class="lb-score">₹8200</span></div>
+                    <div class="lb-row rank-1"><span class="lb-rank">1</span><img src="https://ui-avatars.com/api/?name=Vikash&background=FFD700&color=000" class="lb-avatar"><span class="lb-name">Vikash</span><span class="lb-score">₹8200</span></div>
                     <div class="lb-row rank-2"><span class="lb-rank">2</span><img src="https://i.pravatar.cc/100?img=12" class="lb-avatar"><span class="lb-name">Rahul</span><span class="lb-score">₹4500</span></div>
-                    <div class="lb-row rank-3"><span class="lb-rank">3</span><img src="https://i.pravatar.cc/100?img=13" class="lb-avatar"><span class="lb-name">Aman</span><span class="lb-score">₹3100</span></div>
+                    <div class="lb-row rank-3"><span class="lb-rank">3</span><img src="https://ui-avatars.com/api/?name=Aman&background=cd7f32&color=fff" class="lb-avatar"><span class="lb-name">Aman</span><span class="lb-score">₹3100</span></div>
                     <div class="lb-row"><span class="lb-rank">4</span><img src="https://i.pravatar.cc/100?img=5" class="lb-avatar"><span class="lb-name">Priya</span><span class="lb-score">₹2800</span></div>
-                    <div class="lb-row"><span class="lb-rank">5</span><img src="https://i.pravatar.cc/100?img=8" class="lb-avatar"><span class="lb-name">Nitin</span><span class="lb-score">₹1950</span></div>
+                    <div class="lb-row"><span class="lb-rank">5</span><img src="https://ui-avatars.com/api/?name=Nitin&background=random" class="lb-avatar"><span class="lb-name">Nitin</span><span class="lb-score">₹1950</span></div>
                     <div class="lb-row"><span class="lb-rank">6</span><img src="https://i.pravatar.cc/100?img=9" class="lb-avatar"><span class="lb-name">Khushi</span><span class="lb-score">₹1500</span></div>
-                    <div class="lb-row"><span class="lb-rank">7</span><img src="https://i.pravatar.cc/100?img=15" class="lb-avatar"><span class="lb-name">Raj</span><span class="lb-score">₹1200</span></div>
+                    <div class="lb-row"><span class="lb-rank">7</span><img src="https://ui-avatars.com/api/?name=Raj&background=random" class="lb-avatar"><span class="lb-name">Raj</span><span class="lb-score">₹1200</span></div>
                     <div class="lb-row"><span class="lb-rank">8</span><img src="https://i.pravatar.cc/100?img=16" class="lb-avatar"><span class="lb-name">Sonia</span><span class="lb-score">₹1100</span></div>
-                    <div class="lb-row"><span class="lb-rank">9</span><img src="https://i.pravatar.cc/100?img=17" class="lb-avatar"><span class="lb-name">Amit</span><span class="lb-score">₹950</span></div>
+                    <div class="lb-row"><span class="lb-rank">9</span><img src="https://ui-avatars.com/api/?name=Amit&background=random" class="lb-avatar"><span class="lb-name">Amit</span><span class="lb-score">₹950</span></div>
                     <div class="lb-row"><span class="lb-rank">10</span><img src="https://i.pravatar.cc/100?img=18" class="lb-avatar"><span class="lb-name">Neha</span><span class="lb-score">₹890</span></div>
-                    <div class="lb-row"><span class="lb-rank">11</span><img src="https://i.pravatar.cc/100?img=19" class="lb-avatar"><span class="lb-name">Rohit</span><span class="lb-score">₹820</span></div>
+                    <div class="lb-row"><span class="lb-rank">11</span><img src="https://ui-avatars.com/api/?name=Rohit&background=random" class="lb-avatar"><span class="lb-name">Rohit</span><span class="lb-score">₹820</span></div>
                     <div class="lb-row"><span class="lb-rank">12</span><img src="https://i.pravatar.cc/100?img=20" class="lb-avatar"><span class="lb-name">Pooja</span><span class="lb-score">₹780</span></div>
-                    <div class="lb-row"><span class="lb-rank">13</span><img src="https://i.pravatar.cc/100?img=21" class="lb-avatar"><span class="lb-name">Manish</span><span class="lb-score">₹710</span></div>
+                    <div class="lb-row"><span class="lb-rank">13</span><img src="https://ui-avatars.com/api/?name=Manish&background=random" class="lb-avatar"><span class="lb-name">Manish</span><span class="lb-score">₹710</span></div>
                     <div class="lb-row"><span class="lb-rank">14</span><img src="https://i.pravatar.cc/100?img=22" class="lb-avatar"><span class="lb-name">Sneha</span><span class="lb-score">₹650</span></div>
-                    <div class="lb-row"><span class="lb-rank">15</span><img src="https://i.pravatar.cc/100?img=23" class="lb-avatar"><span class="lb-name">Kunal</span><span class="lb-score">₹620</span></div>
+                    <div class="lb-row"><span class="lb-rank">15</span><img src="https://ui-avatars.com/api/?name=Kunal&background=random" class="lb-avatar"><span class="lb-name">Kunal</span><span class="lb-score">₹620</span></div>
                     <div class="lb-row"><span class="lb-rank">16</span><img src="https://i.pravatar.cc/100?img=24" class="lb-avatar"><span class="lb-name">Riya</span><span class="lb-score">₹590</span></div>
-                    <div class="lb-row"><span class="lb-rank">17</span><img src="https://i.pravatar.cc/100?img=25" class="lb-avatar"><span class="lb-name">Karan</span><span class="lb-score">₹550</span></div>
+                    <div class="lb-row"><span class="lb-rank">17</span><img src="https://ui-avatars.com/api/?name=Karan&background=random" class="lb-avatar"><span class="lb-name">Karan</span><span class="lb-score">₹550</span></div>
                     <div class="lb-row"><span class="lb-rank">18</span><img src="https://i.pravatar.cc/100?img=26" class="lb-avatar"><span class="lb-name">Anjali</span><span class="lb-score">₹510</span></div>
-                    <div class="lb-row"><span class="lb-rank">19</span><img src="https://i.pravatar.cc/100?img=27" class="lb-avatar"><span class="lb-name">Deepak</span><span class="lb-score">₹480</span></div>
+                    <div class="lb-row"><span class="lb-rank">19</span><img src="https://ui-avatars.com/api/?name=Deepak&background=random" class="lb-avatar"><span class="lb-name">Deepak</span><span class="lb-score">₹480</span></div>
                     <div class="lb-row"><span class="lb-rank">20</span><img src="https://i.pravatar.cc/100?img=28" class="lb-avatar"><span class="lb-name">Kavita</span><span class="lb-score">₹460</span></div>
-                    <div class="lb-row"><span class="lb-rank">21</span><img src="https://i.pravatar.cc/100?img=29" class="lb-avatar"><span class="lb-name">Saurabh</span><span class="lb-score">₹410</span></div>
+                    <div class="lb-row"><span class="lb-rank">21</span><img src="https://ui-avatars.com/api/?name=Saurabh&background=random" class="lb-avatar"><span class="lb-name">Saurabh</span><span class="lb-score">₹410</span></div>
                     <div class="lb-row"><span class="lb-rank">22</span><img src="https://i.pravatar.cc/100?img=30" class="lb-avatar"><span class="lb-name">Megha</span><span class="lb-score">₹390</span></div>
-                    <div class="lb-row"><span class="lb-rank">23</span><img src="https://i.pravatar.cc/100?img=31" class="lb-avatar"><span class="lb-name">Vishal</span><span class="lb-score">₹360</span></div>
+                    <div class="lb-row"><span class="lb-rank">23</span><img src="https://ui-avatars.com/api/?name=Vishal&background=random" class="lb-avatar"><span class="lb-name">Vishal</span><span class="lb-score">₹360</span></div>
                     <div class="lb-row"><span class="lb-rank">24</span><img src="https://i.pravatar.cc/100?img=32" class="lb-avatar"><span class="lb-name">Divya</span><span class="lb-score">₹330</span></div>
-                    <div class="lb-row"><span class="lb-rank">25</span><img src="https://i.pravatar.cc/100?img=33" class="lb-avatar"><span class="lb-name">Akash</span><span class="lb-score">₹300</span></div>
+                    <div class="lb-row"><span class="lb-rank">25</span><img src="https://ui-avatars.com/api/?name=Akash&background=random" class="lb-avatar"><span class="lb-name">Akash</span><span class="lb-score">₹300</span></div>
                     <div class="lb-row"><span class="lb-rank">26</span><img src="https://i.pravatar.cc/100?img=34" class="lb-avatar"><span class="lb-name">Ritu</span><span class="lb-score">₹280</span></div>
-                    <div class="lb-row"><span class="lb-rank">27</span><img src="https://i.pravatar.cc/100?img=35" class="lb-avatar"><span class="lb-name">Sanjay</span><span class="lb-score">₹250</span></div>
+                    <div class="lb-row"><span class="lb-rank">27</span><img src="https://ui-avatars.com/api/?name=Sanjay&background=random" class="lb-avatar"><span class="lb-name">Sanjay</span><span class="lb-score">₹250</span></div>
                     <div class="lb-row"><span class="lb-rank">28</span><img src="https://i.pravatar.cc/100?img=36" class="lb-avatar"><span class="lb-name">Kiran</span><span class="lb-score">₹210</span></div>
-                    <div class="lb-row"><span class="lb-rank">29</span><img src="https://i.pravatar.cc/100?img=37" class="lb-avatar"><span class="lb-name">Gaurav</span><span class="lb-score">₹190</span></div>
+                    <div class="lb-row"><span class="lb-rank">29</span><img src="https://ui-avatars.com/api/?name=Gaurav&background=random" class="lb-avatar"><span class="lb-name">Gaurav</span><span class="lb-score">₹190</span></div>
                     <div class="lb-row"><span class="lb-rank">30</span><img src="https://i.pravatar.cc/100?img=38" class="lb-avatar"><span class="lb-name">Swati</span><span class="lb-score">₹150</span></div>
                 </div>
             </div>
@@ -190,19 +195,37 @@
                     <input type="text" id="withDetails" class="custom-input" placeholder="Enter UPI ID / PhonePe Number" />
                     <button class="btn-gold btn-large" id="submitWithdrawBtn">REQUEST WITHDRAW</button>
                 </div>
+
+                <div id="fakeToast" class="fake-toast"></div>
             </div>
 
             <div id="referView" class="app-view">
-                <div class="refer-banner">
-                    <i class="fas fa-gift massive-icon"></i>
-                    <h2>Refer & Earn ₹5</h2>
-                    <p>Share your code! You get <strong>₹5</strong> and your friend gets <strong>₹4</strong> in Deposit Wallet.</p>
+                <div class="refer-hero text-center mb-10">
+                    <i class="fas fa-gifts" style="font-size: 80px; color: var(--gold-main); text-shadow: 0 0 20px rgba(255,215,0,0.5);"></i>
+                    <h2 style="font-family: 'Cormorant Garamond'; color: var(--gold-main); font-size: 32px; margin-top: 10px;">Refer & Earn Big!</h2>
+                    <p class="text-muted">Invite friends and earn real cash instantly.</p>
                 </div>
+
+                <div class="refer-steps">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-share-alt"></i></div>
+                        <p>Share your code</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <p>Friend Signs Up</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon text-gold" style="box-shadow: 0 0 15px rgba(255,215,0,0.3);"><i class="fas fa-coins"></i></div>
+                        <p>You get ₹5, They get ₹4!</p>
+                    </div>
+                </div>
+
                 <div class="refer-code-box">
                     <span id="myReferCode">Loading...</span>
                     <button class="btn-copy"><i class="fas fa-copy"></i> Copy</button>
                 </div>
-                <button class="btn-gold btn-large mt-20"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+                <button class="btn-gold btn-large mt-20" style="background: #25D366; color:#fff; text-shadow: none;"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
             </div>
 
             <div id="profileView" class="app-view">
@@ -212,7 +235,7 @@
                         <div class="edit-overlay"><i class="fas fa-camera"></i></div>
                     </div>
                     <input type="file" id="imageUploadInput" accept="image/*" style="display:none;">
-                    <p id="uploadStatus" style="color:#10b981; font-size:12px; display:none;">Compressing & Uploading...</p>
+                    <p id="uploadStatus" style="color:#10b981; font-size:12px; display:none; margin-top:10px;">Uploading to Profile...</p>
                     
                     <div class="name-edit-group">
                         <input type="text" id="profileUsernameInput" value="Player" disabled />
@@ -223,7 +246,6 @@
                 </div>
                 
                 <div class="profile-menu">
-                    <div class="menu-item" id="themeToggleBtn"><i class="fas fa-moon"></i> Theme (Light/Dark) <i class="fas fa-sync arrow"></i></div>
                     <div class="menu-item nav-trigger" data-target="contactView"><i class="fas fa-headset"></i> Help & Support <i class="fas fa-chevron-right arrow"></i></div>
                     <div class="menu-item nav-trigger" data-target="privacyView"><i class="fas fa-shield-alt"></i> Privacy Policy <i class="fas fa-chevron-right arrow"></i></div>
                     <div class="menu-item" id="logoutBtn" style="color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout <i class="fas fa-chevron-right arrow"></i></div>
@@ -240,36 +262,34 @@
             <div id="privacyView" class="app-view"><h2 class="section-title">Privacy Policy</h2><div class="privacy-content"><p>Your data is secured with high-end encryption...</p></div></div>
 
             <div id="adminView" class="app-view">
-                <h2 class="text-center" style="color:#ef4444;"><i class="fas fa-user-shield"></i> MASTER ADMIN</h2>
+                <h2 class="text-center" style="color:#ef4444; font-weight:900; letter-spacing:2px;"><i class="fas fa-user-shield"></i> MASTER ADMIN</h2>
                 
-                <div class="admin-box mt-20">
-                    <h3 class="text-gold">Update Banner</h3>
-                    <input type="text" id="adminBannerImg" placeholder="Image URL" class="custom-input">
-                    <input type="text" id="adminBannerLink" placeholder="Click Link (URL)" class="custom-input">
-                    <button class="btn-gold" id="updateBannerBtn">Save Banner</button>
+                <div class="admin-box mt-20" style="border-color: #3b82f6;">
+                    <h3 class="text-gold"><i class="fas fa-cogs"></i> Global Settings</h3>
+                    <button class="btn-outline mb-10" id="adminThemeToggle"><i class="fas fa-moon"></i> Toggle Light/Dark Theme for All Users</button>
+                    <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
+                    <input type="text" id="newAdminPin" placeholder="Enter New PIN" class="custom-input mb-10">
+                    <button class="btn-gold" id="changePinBtn">Update Admin PIN</button>
                 </div>
 
                 <div class="admin-box mt-20">
-                    <h3 class="text-gold">Post Match</h3>
-                    <select id="adminMatchCat" class="custom-input">
-                        <option value="1v1">1 VS 1 Battle</option>
-                        <option value="2v2">2 VS 2 Battle</option>
-                        <option value="4v4">4 VS 4 Battle</option>
-                    </select>
+                    <h3 class="text-gold"><i class="fas fa-images"></i> Add Banners</h3>
+                    <input type="text" id="adminBannerImg" placeholder="Banner Image URL" class="custom-input">
+                    <input type="text" id="adminBannerLink" placeholder="Click Link (URL)" class="custom-input">
+                    <button class="btn-gold mb-10" id="addBannerBtn">Add Banner to Slider</button>
+                    <h4 style="color:#ccc; font-size: 12px;">Active Banners:</h4>
+                    <div id="adminBannerList" class="vertical-list mt-10"></div>
+                </div>
+
+                <div class="admin-box mt-20">
+                    <h3 class="text-gold"><i class="fas fa-plus-square"></i> Post Match</h3>
                     <input type="number" id="adminMatchEntry" placeholder="Entry (₹)" class="custom-input">
                     <input type="number" id="adminMatchPrize" placeholder="Win Prize (₹)" class="custom-input">
                     <button class="btn-outline" id="addMatchBtn">Post Match Live</button>
                 </div>
 
-                <div class="admin-box mt-20">
-                    <h3 class="text-gold">Pending Deposits</h3>
-                    <div id="adminDepositList"></div>
-                </div>
-
-                <div class="admin-box mt-20">
-                    <h3 class="text-gold">Pending Withdrawals</h3>
-                    <div id="adminWithdrawList"></div>
-                </div>
+                <div class="admin-box mt-20"><h3 class="text-gold">Pending Deposits</h3><div id="adminDepositList"></div></div>
+                <div class="admin-box mt-20"><h3 class="text-gold">Pending Withdrawals</h3><div id="adminWithdrawList"></div></div>
             </div>
 
         </div>
@@ -286,7 +306,7 @@
     <div id="matchDetailsOverlay" class="screen">
         <div class="match-detail-box">
             <button class="close-btn" id="closeMatchDetails"><i class="fas fa-times"></i></button>
-            <h2 id="mdCat">1 VS 1 BATTLE</h2>
+            <h2 id="mdCat">CASH BATTLE</h2>
             <div class="md-stats">
                 <div class="stat"><p>Entry</p><h3 id="mdEntry">₹0</h3></div>
                 <div class="stat"><p>Prize</p><h3 id="mdPrize" class="text-gold">₹0</h3></div>
@@ -307,12 +327,8 @@
                 <div class="player-box">
                     <div class="slot-machine-wrapper">
                         <div class="slot-strip" id="slotStrip">
-                            <img src="https://i.pravatar.cc/100?img=1">
-                            <img src="https://i.pravatar.cc/100?img=2">
-                            <img src="https://i.pravatar.cc/100?img=3">
-                            <img src="https://i.pravatar.cc/100?img=4">
-                            <img src="https://i.pravatar.cc/100?img=5">
-                            <img src="https://i.pravatar.cc/100?img=6">
+                            <img src="https://i.pravatar.cc/100?img=1"><img src="https://i.pravatar.cc/100?img=2"><img src="https://i.pravatar.cc/100?img=3">
+                            <img src="https://i.pravatar.cc/100?img=4"><img src="https://i.pravatar.cc/100?img=5"><img src="https://i.pravatar.cc/100?img=6">
                             <img src="https://i.pravatar.cc/100?img=7">
                         </div>
                     </div>
